@@ -23,7 +23,7 @@
 	$repo_index = "index.aux";
 
 /* The directory where repo directories resist */
-	$repo_directory = "/var/git/repositories/";
+	$repo_directory = dirname(__FILE__) . "/";
 
 /* The suffix, that can be used for complementing the repo directory,
  * useful when you are using nonbare repositories, then:
@@ -34,9 +34,9 @@
 /* The date format to show the dates of commits */
 	$git_date_format = 'd.m.Y (H:i)';
 
-	$cache_name = ".cache/";
-	$secret_name = ".secrets/";
-	$bundle_name = ".bundles/";
+	$cache_name = "./temp/cache/";
+	$secret_name = "./temp/secrets/";
+	$bundle_name = "./temp/bundles/";
 	$cache_directory = "{$repo_directory}{$cache_name}";
 
 	$repo_http_relpath = "/git-php/";
