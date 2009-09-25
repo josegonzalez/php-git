@@ -16,14 +16,15 @@
 /* True if committing is active */
 	$git_commiting_active = true;
 
-/* E-mail address to notify about the bundles */
+/* Personal information */
 	$emailaddress = "mail@example.com";
-
 	$title  = "Owner's public repository";
+
+/* Unused */
 	$repo_index = "index.aux";
 
 /* The directory where repo directories resist */
-	$repo_directory = dirname(__FILE__) . "/";
+	$repo_directory = '/var/user/';
 
 /* The suffix, that can be used for complementing the repo directory,
  * useful when you are using nonbare repositories, then:
@@ -37,10 +38,10 @@
 	$cache_name = ".temp/cache/";
 	$secret_name = ".temp/secrets/";
 	$bundle_name = ".temp/bundles/";
-	$cache_directory = "{$repo_directory}{$cache_name}";
+	$cache_directory = dirname(__FILE__) . "/{$cache_name}";
 
-	$repo_http_relpath = "/git-php/";
-	$http_server_name = "localhost";
+	$repo_http_relpath = "";
+	$http_server_name = "http://localhost/";
 	$http_method_prefix = "{$http_server_name}{$repo_http_relpath}";
 	$communication_link = "http://mypersonalwebsite.com";
 

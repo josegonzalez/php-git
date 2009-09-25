@@ -10,24 +10,26 @@ Git-PHP is a port of gitweb to PHP. It includes various functionality, such as s
 
 ## Installation
 1.  edit config.php
-2.  In a terminal window, change directories to your $repo_directory and execute the following:
+2.  In a terminal window, change directories to your git-php install directory and execute the following:
     *  ``mkdir .temp/cache .temp/bundles .temp/secrets ; chmod -R 777 .cache .bundles .secrets``
 
 ### Supposed directory structure:
+	git-php-\
+			|
+			+-.temp\
+					|
+					+-cache
+					|
+					+-bundles
+					|
+					+-secrets
 	$repo_directory-\
 			|
-			+-.temp/$cache_name
+			+-project1\.git
 			|
-			+-.temp/$secret_name
-			|
-			+-.temp/$bundle_name
-			|
-			+-project1 / .git
-			|
-			+-project2 / .git
+			+-project2\.git
 			|
 			...
-
 
 ### Notes
 #### Code/Variables:
