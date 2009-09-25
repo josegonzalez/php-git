@@ -34,9 +34,9 @@
 /* The date format to show the dates of commits */
 	$git_date_format = 'd.m.Y (H:i)';
 
-	$cache_name = "./temp/cache/";
-	$secret_name = "./temp/secrets/";
-	$bundle_name = "./temp/bundles/";
+	$cache_name = ".temp/cache/";
+	$secret_name = ".temp/secrets/";
+	$bundle_name = ".temp/bundles/";
 	$cache_directory = "{$repo_directory}{$cache_name}";
 
 	$repo_http_relpath = "/git-php/";
