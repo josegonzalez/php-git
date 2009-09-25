@@ -1,0 +1,47 @@
+This is only a rough unsorted collection
+of informations. The original git-php
+had no README at all :-(
+
+
+requirements:
+- git
+- enscript
+
+
+To setup git.php:
+
+- edit config.php
+- mkdir $repo_directory/.cache
+  with appropiate permissions
+
+Supposed directory structure:
+$repo_directory-\
+                |
+                +-$cache_name
+                |
+                +-$secret_name
+                |
+                +-$bundle_name
+                |
+                +-project1 / .git
+                |
+                +-project2 / .git
+                |
+                ...
+
+
+Code/Variables:
+ (just for understanding code; doing cleanup)
+
+ $repos = all found $repo_path (security.php)
+
+ $proj = name of a Project (=its directories name)
+        with no leading or trailing slash !!
+
+ $repopath = $repo_directory . $proj . "/"
+        is_dir ( $repo_path . "/.git" ) == true
+
+
+URL-parameter:
+ p: $proj
+ tr: any branch or tag or HEAD in a git-repo.

@@ -1,0 +1,179 @@
+#gitbody
+{
+  margin: 10px 10px 10px 10px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: gray;
+  font-family: sans-serif;
+  font-size: 12px;
+  }
+
+div.githead
+{
+  margin: 0px 0px 0px 0px;
+  padding: 10px 10px 10px 10px;
+  background-color: #d9d8d1;
+  font-weight: bold;
+  font-size: 18px;
+  }
+
+#gitbody th
+{
+  text-align: left;
+  padding: 0px 0px 0px 7px;
+  }
+
+#gitbody td
+{
+  padding: 0px 0px 0px 7px;
+  }
+
+div.optiontable table
+{
+  padding: 0px 7px 0px 7px;
+  border-width: 0px;
+  font-size: 12px;
+  table-layout: fixed;
+  padding: 5px;
+  line-height: 36px;
+  cellpadding: 5px;
+  border-spacing: 0px;
+  width: 100%;
+  vertical-align: middle;
+  }
+
+div.optiontable tr:hover
+{
+  border-width: 1px;
+  }
+
+div.optiontable .descol
+{
+  text-align: right;
+  width: 30%;
+  }
+
+div.optiontable .valcol
+{
+  text-align: left;
+  width: 70%
+  }
+
+div.optiontable img
+{
+  vertical-align: middle;
+  }
+
+div.imgtable table
+{
+  padding: 0px 0px 0px 7px;
+  border-width: 0px;
+  font-size: 1px;
+  table-layout: auto;
+  }
+
+div.imgtable tags
+{
+  color: #009900;
+  background-color: #FFFF00;
+  }
+
+div.imgtable branches
+{
+  color: #CC6600;
+  background-color: #99FF99;
+  }
+
+div.imgtable img
+{
+  border: 0px;
+  display: block;
+  }
+
+div.imgtable .inl img
+{
+  border: 0px;
+  display: inline;
+  }
+
+div.imgtable .inl td
+{
+  height: auto;
+  vertical-align: middle;
+  font-size: 2px;
+  line-height: 3px;
+  }
+
+div.imgtable tr
+{
+  height: auto;
+  vertical-align: middle;
+  font-size: 9px;
+/*  line-height: 15px;*/
+  }
+
+tr:hover
+{
+  background-color:#cdccc6;
+  }
+
+div.gitbrowse a.blob
+{
+  text-decoration: none;
+  color: #000000;
+  }
+
+div.gitcode {
+              padding: 10px;
+              }
+
+div.gitspacer
+{
+  padding: 1px 0px 0px 0px;
+  background-color: #FFFFFF;
+  }
+
+div.gitfooter
+{
+  padding: 7px 2px 2px 2px;
+  background-color: #d9d8d1;
+  text-align: right;
+  }
+
+div.gittitle
+{
+  padding: 7px 7px 7px 7px;
+  background-color: #d9d8d1;
+  font-weight: bold;
+  }
+
+div.gitbrowse a.blob:hover
+{
+  text-decoration: underline;
+  }
+a.gitbrowse:hover
+{
+  text-decoration:underline;
+  color:#880000;
+  }
+a.rss_logo
+{
+  float:left;
+  padding:3px 0px;
+  width:35px;
+  line-height:10px;
+  margin: 2px 5px 5px 5px;
+  border:1px solid;
+  border-color:#fcc7a5 #7d3302 #3e1a01 #ff954e;
+  color:#ffffff;
+  background-color:#ff6600;
+  font-weight:bold;
+  font-family:sans-serif;
+  font-size:10px;
+  text-align:center;
+  text-decoration:none;
+  }
+a.rss_logo:hover
+{
+  background-color:#ee5500;
+  }
