@@ -25,60 +25,55 @@
   // | Author: Peeter Vois http://people.proekspert.ee/peeter/blog            |
   // +------------------------------------------------------------------------+ 
 
-function stat_inc_count( $proj )
-{
-  $td = 0; $tt = 0;
-  stat_get_count( $proj, $td, $tt, true );
+function stat_inc_count($proj) {
+	$td = 0; $tt = 0;
+	stat_get_count($proj, $td, $tt, true);
 }
 
-function stat_get_count( $proj, &$today, &$total, $inc=false )
-{
-  file_stat_get_count( $proj, $today, $total, $inc, 'counters' );
+function stat_get_count($proj, &$today, &$total, $inc = false) {
+	file_stat_get_count($proj, $today, $total, $inc, 'counters');
 }
 
 // local function (only called from within this file.
-function file_stat_get_count( $proj, &$today, &$total, $inc, $fbasename )
-{
-  global $cache_name, $repo_suffix;
-  $rtoday = 0;
-  $rtotal = 0;
-  $now = floor(time()/24/60/60); // number of days since 1970
-  $fname = dirname($proj)."/".$cache_name.$fbasename."-".basename($proj,".git");
-  $fd = 0;
-  
-  
-  //$fp1 = sem_get(fileinode($fname), 1);
-  //sem_acquire($fp1);
-  
-  if( file_exists( $fname ) )
-    $file = fopen( $fname, "r" ); // open the counter file
-  else
-    $file = FALSE;
-  if( $file != FALSE ){
-    fseek( $file, 0 ); // rewind the file to beginning
-    // read out the counter value
-    fscanf( $file, "%d %d %d", $fd, $rtoday, $rtotal );
-    if( $fd != $now ){
-      $rtoday = 0;
-      $fd = $now;
-    }
-    if( $inc ){
-      $rtoday++;
-      $rtotal++;
-    }
-    fclose( $file );
-  }
-  // uncomment the next lines to erase the counters
-  //$rtoday = 0;
-  //$rtotal = 0;        
-  $file = fopen( $fname, "w" ); // open or create the counter file      
-  // write the counter value
-  fseek( $file, 0 ); // rewind the file to beginning
-  fwrite( $file, "$fd $rtoday $rtotal\n" );
-  fclose( $file );
-  $today = $rtoday;
-  $total = $rtotal;     
+function file_stat_get_count($proj, &$today, &$total, $inc, $fbasename) {
+	global $cache_name, $repo_suffix;
+	$rtoday = 0;
+	$rtotal = 0;
+	$now = floor(time()/24/60/60); // number of days since 1970
+	$fname = dirname($proj)."/".$cache_name.$fbasename."-".basename($proj,".git");
+	$fd = 0;
+
+	//$fp1 = sem_get(fileinode($fname), 1);
+	//sem_acquire($fp1);
+
+	if (file_exists($fname)) {
+		$file = fopen($fname, "r"); // open the counter file
+	} else {
+		$file = FALSE;
+	}
+	if ($file != FALSE) {
+		fseek($file, 0); // rewind the file to beginning
+		// read out the counter value
+		fscanf($file, "%d %d %d", $fd, $rtoday, $rtotal);
+		if($fd != $now) {
+			$rtoday = 0;
+			$fd = $now;
+		}
+		if ($inc) {
+			$rtoday++;
+			$rtotal++;
+		}
+		fclose($file);
+	}
+	// uncomment the next lines to erase the counters
+	//$rtoday = 0;
+	//$rtotal = 0;
+	$file = fopen($fname, "w"); // open or create the counter file
+	// write the counter value
+	fseek($file, 0); // rewind the file to beginning
+	fwrite($file, "$fd $rtoday $rtotal\n");
+	fclose($file);
+	$today = $rtoday;
+	$total = $rtotal;
 }
-
-
 ?>

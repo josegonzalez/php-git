@@ -25,21 +25,19 @@
   // | Author: Peeter Vois http://people.proekspert.ee/peeter/blog            |
   // +------------------------------------------------------------------------+ 
 
-function create_directory( $fullpath )
-{
-  if( ($fullpath[0] != '/') && ($fullpath[1] == 0) ){
-    echo "Wrong path name $fullpath\n";
-    die();
-  }
-  if( ! is_dir($fullpath) ){
-    if( ! mkdir($fullpath) ){
-      echo "Error by making directory $fullpath\n";
-      die();
-    }
-    chmod( $fullpath, 0777 );
-    return true;
-  }
-  return false; 
+function create_directory($fullpath) {
+	if(($fullpath[0] != '/') && ($fullpath[1] == 0)) {
+		echo "Wrong path name $fullpath\n";
+		die();
+	}
+	if( ! is_dir($fullpath) ){
+		if( ! mkdir($fullpath) ){
+			echo "Error by making directory $fullpath\n";
+			die();
+		}
+		chmod( $fullpath, 0777 );
+		return true;
+	}
+	return false;
 }
-
 ?>

@@ -1,9 +1,0 @@
-#1- FIXED Repos are not shown
-
-It appears that when installing this into my test directory,
-then git.php is not able to take the projects out of another
-directory.
-
-FIX: Added config variable $repo_suffix, where it can be specified
-the non bare repositories addon.
-
