@@ -46,7 +46,6 @@
 
 /* The directory where repo directories reside (Trailing slash) */
 	$CONFIG['repo_directory'] = "/var/user/";
-    $CONFIG['repo_directory'] = "/home/xan/git/";
 
 /* The suffix, that can be used for complementing the repo directory,
  * useful when you are using nonbare repositories, then:
