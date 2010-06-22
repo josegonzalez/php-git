@@ -21,8 +21,9 @@
   // | Foundation, Inc., 59 Temple Place - Suite 330,                         |
   // | Boston, MA  02111-1307, USA.                                           |
   // +------------------------------------------------------------------------+
-  // |                                                                        |
+  // | Author: Zack Bartel <zack@bartel.com>                                  |
   // | Author: Peeter Vois http://people.proekspert.ee/peeter/blog            |
+  // | Author: Xan Manning http://knoxious.co.uk/                             |
   // +------------------------------------------------------------------------+ 
 
 function create_directory($fullpath) {

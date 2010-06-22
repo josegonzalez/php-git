@@ -23,6 +23,7 @@
   // +------------------------------------------------------------------------+
   // | Author: Zack Bartel <zack@bartel.com>                                  |
   // | Author: Peeter Vois http://people.proekspert.ee/peeter/blog            |
+  // | Author: Xan Manning http://knoxious.co.uk/                             |
   // +------------------------------------------------------------------------+ 
 
   // this functions existance starts from php5
@@ -81,14 +82,14 @@ function html_ref($arguments, $prefix) {
 }
 
 function html_header() {
-	global $title;
+	global $CONFIG['repo_title'];
 	global $git_embed;
 
 	if (!$git_embed) {
 		echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n";
 		echo "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n";
 		echo "<head>\n";
-		echo "\t<title>$title</title>\n";
+		echo "\t<title>$CONFIG['repo_title']</title>\n";
 		echo "\t<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"/>\n";
 		echo "\t<meta NAME=\"ROBOTS\" CONTENT=\"NOFOLLOW\" />\n";
 		echo "</head>\n";
@@ -123,13 +124,13 @@ function html_breadcrumbs() {
 }
 
 function html_pages() {
-	global $git_bundle_active;
+	global $CONFIG['git_bundle_active'];
 	if(isset($_GET['p'])) {
 		html_spacer();
 		$now = floor(time()/15/60); // one hour
 		echo "<center>";
 		echo "<a href=\"git.php?p=".$_GET['p']."&tm=$now\">browse</a>";
-		if($git_bundle_active) {
+		if($CONFIG['git_bundle_active']) {
 			echo " | <a href=\"commit.php?p={$_GET['p']}\">commit</a>";
 		}
 		echo "</center>";
@@ -138,14 +139,14 @@ function html_pages() {
 
 function html_footer()  {
 	global $git_embed;
-	global $git_logo;
+	global $CONFIG['git_logo'];
 
 	echo "<div class=\"gitfooter\">\n";
 
 	if (isset($_GET['p']))  {
 		echo "<a class=\"rss_logo\" href=\"".sanitized_url()."p={$_GET['p']}&dl=rss2\" >RSS</a>\n";
 	}
-	if ($git_logo)    {
+	if ($CONFIG['git_logo'])    {
 		echo "<a href=\"http://www.kernel.org/pub/software/scm/git/docs/\">" . 
 		"<img src=\"".sanitized_url()."dl=git_logo\" style=\"border-width: 0px;\"/></a>\n";
 	}
@@ -193,12 +194,12 @@ function html_title($text = "&nbsp;") {
 }
 
 function html_style()   {
-	global $git_css;
+	global $CONFIG['git_css'];
 
 	if (file_exists("style.css")) {
 		echo "<link rel=\"stylesheet\" href=\"style.css\" type=\"text/css\" />\n";
 	}
-	if ($git_css) {
+	if ($CONFIG['git_css']) {
 		echo "<link rel=\"stylesheet\" href=\"gitstyle.css\" type=\"text/css\" />\n";
 	}
 }

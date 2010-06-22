@@ -23,18 +23,19 @@
   // +------------------------------------------------------------------------+
   // | Author: Zack Bartel <zack@bartel.com>                                  |
   // | Author: Peeter Vois http://people.proekspert.ee/peeter/blog            |
+  // | Author: Xan Manning http://knoxious.co.uk/                             |
   // +------------------------------------------------------------------------+ 
 
 function security_load_repos() {
-	global $repo_directory, $repo_suffix, $validargs, $repos;
+	global $CONFIG, $validargs, $repos;
 
-	if (isset($repo_directory) && file_exists($repo_directory) && is_dir($repo_directory)) {
-		if ($handle = opendir($repo_directory)) {
+	if (isset($CONFIG['repo_directory']) && file_exists($CONFIG['repo_directory']) && is_dir($CONFIG['repo_directory'])) {
+		if ($handle = opendir($CONFIG['repo_directory'])) {
 			while (false !== ($file = readdir($handle))) {
-				$fullpath = $repo_directory . $file;
-				//printf("%s,%d\n", $file, is_dir($repo_directory . "/" . $file));
+				$fullpath = $CONFIG['repo_directory'] . $file;
+				//printf("%s,%d\n", $file, is_dir($CONFIG['repo_directory'] . "/" . $file));
 				if ($file[0] != '.' && is_dir($fullpath)) {
-					if (is_dir($fullpath . $repo_suffix)) {
+					if (is_dir($fullpath . $CONFIG['repo_suffix'])) {
 						/* TODO: Check for valid git repos */
 						// fill the security array.
 						$validargs[] = trim($file);
@@ -66,7 +67,7 @@ function security_test_repository_arg() {
 }
 
 function security_load_names() {
-	global $validargs, $repo_direcotry, $repo_suffix, $branches, $tags;
+	global $validargs, $CONFIG, $branches, $tags;
 
 	if (isset($_GET['p'])) {
 		// now load the repository into validargs
@@ -86,7 +87,7 @@ function security_load_names() {
 		if (isset($_GET['tr']) && is_valid($_GET['tr'])) {
 			$head = $_GET['tr'];
 		}
-		$cmd = "GIT_DIR=" . get_repo_path($proj) . $repo_suffix . " git ls-tree -r -t " . escapeshellarg($head) . " 2>&1 | sed -e 's/\t/ /g'";
+		$cmd = "GIT_DIR=" . get_repo_path($proj) . $CONFIG['repo_suffix'] . " git ls-tree -r -t " . escapeshellarg($head) . " 2>&1 | sed -e 's/\t/ /g'";
 		exec($cmd, &$out);
 		foreach ($out as $line) {
 			$arr = explode(" ", $line);
@@ -190,7 +191,7 @@ function draw_human_checker($amessage) {
 
 	$ml = strlen($amessage);
 	$w = $ml * $fw +6;
-	$h = $fh+6;
+	$h = $fh + 6;
 	$prob = 5;
 
 	$im = imagecreate($w, $h);
@@ -233,43 +234,43 @@ function draw_human_checker($amessage) {
 }
 
 function create_secrets_directory() {
-	global $repo_directory, $secret_name;
+	global $CONFIG;
 
-	$dname = $repo_directory.$secret_name;
+	$dname = $CONFIG['repo_directory'] . $CONFIG['secret_name'];
 	if (create_directory($dname) == false) return false;
 	/* TODO: This is Apache-specific. How to generalize? */
-	$file = fopen($dname.".htaccess", "w"); 
+	$file = fopen($dname . ".htaccess", "w"); 
 	fwrite($file, "Deny from all\n");
 	fclose($file);
-	$file = fopen($dname."index.html", "w");
+	$file = fopen($dname . "index.html", "w");
 	fwrite($file, "Access denied\n");
 	fclose($file);
 	return true;
 }
 
 function create_secret() {
-	global $repo_directory, $secret_name;
+	global $CONFIG;
 
-	$now = floor(time()/60/60); // number of hours since 1970
+	$now = floor(time() / 60 / 60); // number of hours since 1970
 	$secret = "";
 
 	create_secrets_directory();
-	do{ $secret = create_random_message(9); }while (file_exists($repo_directory.$secret_name.$secret));
-	$file = fopen($repo_directory.$secret_name.$secret, "w");
+	do{ $secret = create_random_message(9); }while (file_exists($CONFIG['repo_directory'] . $CONFIG['secret_name'] . $secret));
+	$file = fopen($CONFIG['repo_directory'] . $CONFIG['secret_name'] . $secret, "w");
 	fwrite($file, "$now");
 	fclose($file);
 	return $secret;
 }
 
 function clean_up_secrets() {
-	global $repo_directory, $secret_name;
+	global $CONFIG;
 	$now = floor(time()/60/60); // number hours since 1970
 	create_secrets_directory();
-	if ($handle = opendir($repo_directory.$secret_name)) {
+	if ($handle = opendir($CONFIG['repo_directory'] . $CONFIG['secret_name'])) {
 		while (false !== ($fname = readdir($handle))) {
 			if (!is_numeric($fname)) continue;
-			$fullpath = $repo_directory.$secret_name.$fname;
-			//printf("%s,%d\n", $file, is_dir($repo_directory . "/" . $file));
+			$fullpath = $CONFIG['repo_directory'] . $CONFIG['secret_name'] . $fname;
+			//printf("%s,%d\n", $file, is_dir($CONFIG['repo_directory'] . "/" . $file));
 			if (!is_file($fullpath)) continue;
 			$file = fopen($fullpath , "r");
 			$fd = 0;
@@ -282,14 +283,14 @@ function clean_up_secrets() {
 }
 
 function check_secret($fname) {
-	global $repo_directory, $secret_name;
+	global $CONFIG;
 
 	if (!is_numeric($fname)) {
 		hacker_gaught($fname);
 		die(); // dangerously wrong secret
 	}
 
-	$fullpath = $repo_directory.$secret_name.$fname;
+	$fullpath = $CONFIG['repo_directory'] . $CONFIG['secret_name'] . $fname;
 	if (!file_exists($fullpath)) {
 		// wrong secret
 		return false;
