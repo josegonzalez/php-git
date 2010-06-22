@@ -336,14 +336,14 @@ function html_tree($proj, $tree) {
 			$plain = html_ahref(array('p' => $proj, 'dl' => "plain", 'h' => $obj['hash'], 'n' => $obj['file'])) . "plain</a>";
 			$dlfile = " | " . html_ahref(array('p' => $proj, 'dl' => "dlfile", 'h' => $obj['hash'], 'n' => $obj['file'])) . "file</a>";
 			$objlink = html_ahref(array('p' => $proj, 'a' => "jump_to_tag", 'b' => $obj['hash'], 'n' => $obj['file']), "blob") . $obj['file'] . "</a>\n";
-			$ext=@$extEnscript[strrchr($obj['file'],".")];
+			$ext = @$extEnscript[strrchr($obj['file'], ".")];
 			if ($ext == "") {
 				$icon = "<img src=\"" . sanitized_url() . "dl=icon_plain\" style=\"border-width: 0px;\"/>";
 			} else {
 				$icon = "<img src=\"" . sanitized_url() . "dl=icon_color\" style=\"border-width: 0px;\"/>";
 			}
 		}
-		echo "<tr><td>" . $perm . "</td><td>" . $icon . "</td></td><td>" . $objlink . "</td><td>" . $plain$dlfile . "</td></tr>\n";
+		echo "<tr><td>" . $perm . "</td><td>" . $icon . "</td></td><td>" . $objlink . "</td><td>" . $plain . $dlfile . "</td></tr>\n";
 	}
 	echo "</table>\n";
 	echo "</div>\n";
@@ -429,7 +429,7 @@ function html_shortlog($proj, $lines) {
 			$tree = html_ahref(array('p' => $_GET['p'], 'a' => "jump_to_tag", 'tag' => $cid, 'tr' => $tid, 't' => $tid, 'pg' => "")) . "tree</a>";
 		}
 		echo "<tr><td>{$date}</td>";
-		echo "<td>" . html_ahref(array('p' => $_GET['p'], 'a' => "jump_to_tag", 'tag' => $cid)) . s"<img src=\"" . $CONFIG['repo_http_relpath']  . $CONFIG['cache_name'] . $proj . "/graph-" . $cid . ".png\" /></a></td>";
+		echo "<td>" . html_ahref(array('p' => $_GET['p'], 'a' => "jump_to_tag", 'tag' => $cid)) . "<img src=\"" . $CONFIG['repo_http_relpath'] . $CONFIG['cache_name'] . $proj . "/graph-" . $cid . ".png\" /></a></td>";
 		echo "<td>{$auth}</td><td>";
 		if (in_array($cid,$branches)) {
 			foreach($branches as $symbolic => $hashic) {
@@ -596,7 +596,7 @@ function get_file_owner($repopath) {
 function get_last($repopath) {
 	global $CONFIG;
 	$out = array();
-	$cmd = "GIT_DIR=" . escapeshellarg($repopath . $CONFIG['repo_suffix'])) . " git rev-list  --header --max-count=1 HEAD 2>&1 | grep -a committer | cut -d' ' -f5-6";
+	$cmd = "GIT_DIR=" . escapeshellarg($repopath . $CONFIG['repo_suffix']) . " git rev-list  --header --max-count=1 HEAD 2>&1 | grep -a committer | cut -d' ' -f5-6";
 	$date = exec($cmd, &$out);
 	return date($CONFIG['git_date_format'], (int)$date);
 }

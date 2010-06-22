@@ -217,22 +217,22 @@ function save_bundle() {
 	$fname = "";
 	do {
 		$fname = create_random_message(9);
-	} while (is_file("{$dname}{$fname}"));
-	$fullpath = "{$dname}{$fname}";
+	} while (is_file($dname . $fname));
+	$fullpath = $dname . $fname;
 	if (false == move_uploaded_file($_FILES['bundle_file']['tmp_name'], $fullpath)) {
 		return false;
 	}
 	chmod($fullpath, 0666);
-	$file = fopen("{$fullpath}.txt", "w");
+	$file = fopen($fullpath . ".txt", "w");
 	fwrite($file, $_POST['commiter_name'], 40);
 	fclose($file);
-	chmod("{$fullpath}.txt", 0666);
+	chmod($fullpath . ".txt", 0666);
 	// send e-mail message about the commitment
-	$message = "{$_POST['commiter_name']}\n {$fullpath}\n";
-	$headers = "From: {$CONFIG['email_address']}\r\n" .
-		"Reply-To: {$CONFIG['email_address']}\r\n" .
+	$message = $_POST['commiter_name'] . "\n " . $fullpath . "\n";
+	$headers = "From: " . $CONFIG['email_address'] . "\r\n" .
+		"Reply-To: " . $CONFIG['email_address'] . "\r\n" .
 		'X-Mailer: PHP/' . phpversion();
-	$ok = mail($CONFIG['email_address'], "Bundle sent to {$repo}", $message, $headers);
+	$ok = mail($CONFIG['email_address'], "Bundle sent to " . $repo, $message, $headers);
 	if (!$ok) {
 		echo "Error sending email message\n";
 	}
@@ -242,11 +242,11 @@ function save_bundle() {
 // check if a tag is in repository
 function check_tag_in_repo($the_tag) {
 	global $CONFIG['repo_directory'];
-	$repo=$_GET['p'];
+	$repo = $_GET['p'];
 	$out = array();
 	$nr=0;
 	do {
-		$cmd="GIT_DIR=".escapeshellarg($CONFIG['repo_directory'].$repo)." git rev-list --all --full-history --topo-order ";
+		$cmd="GIT_DIR=" . escapeshellarg($CONFIG['repo_directory'] . $repo) . " git rev-list --all --full-history --topo-order ";
 		$cmd .= "--max-count=1000 --skip=" .escapeshellarg($nr) ." ";
 		$cmd .= "--pretty=format:\"";
 		$cmd .= "parents %P%n";

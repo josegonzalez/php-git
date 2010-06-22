@@ -44,8 +44,9 @@
 	$CONFIG['email_address'] = "mail@example.com";
 	$CONFIG['repo_title']  = "My public repository";
 
-/* The directory where repo directories reside */
+/* The directory where repo directories reside (Trailing slash) */
 	$CONFIG['repo_directory'] = "/var/user/";
+    $CONFIG['repo_directory'] = "/home/xan/git/";
 
 /* The suffix, that can be used for complementing the repo directory,
  * useful when you are using nonbare repositories, then:
@@ -68,7 +69,7 @@
 
 /* if git is not installed into standard path, we need to set the path */
 	$mypath = getenv("PATH");
-	$addpath = "/usr/bin/git";
+	$addpath = "/usr/local/git/bin";
 	if (isset($mypath)) {
 		$mypath .= ":" . $addpath;
 	} else {
