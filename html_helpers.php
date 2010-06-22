@@ -47,7 +47,7 @@ function array_diff_ukey1($array1, $array2) {
 function html_ahref($arguments, $class = ""){
 	$ahref = "<a ";
 	if($class != "") {
-		$ahref .= "class=\"$class\" ";
+		$ahref .= "class=\"" . $class . "\" ";
 	}
 	$ahref .= "href=\"";
 
@@ -76,7 +76,7 @@ function html_ref($arguments, $prefix) {
 		}
 	}
 	$now = floor(time()/15/60); // one hour
-	$ahref .= "tm=$now";
+	$ahref .= "tm=" . $now;
 	$ahref .= "\">";
 	return $ahref;
 }
@@ -89,7 +89,7 @@ function html_header() {
 		echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n";
 		echo "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n";
 		echo "<head>\n";
-		echo "\t<title>$CONFIG['repo_title']</title>\n";
+		echo "\t<title>" . $CONFIG['repo_title'] . "</title>\n";
 		echo "\t<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"/>\n";
 		echo "\t<meta NAME=\"ROBOTS\" CONTENT=\"NOFOLLOW\" />\n";
 		echo "</head>\n";
@@ -97,14 +97,14 @@ function html_header() {
 	}
 	/* Add rss2 link */
 	if (isset($_GET['p']))  {
-		echo "<link rel=\"alternate\" title=\"{$_GET['p']}\" href=\"".sanitized_url()."p={$_GET['p']}&dl=rss2\" type=\"application/rss+xml\" />\n";
+		echo "<link rel=\"alternate\" title=\"" . $_GET['p'] . "\" href=\"" . sanitized_url() . "p=" . $_GET['p'] . "&dl=rss2\" type=\"application/rss+xml\" />\n";
 	}
 	echo "<div id=\"gitbody\">\n";
 }
 
 function html_breadcrumbs() {
 	echo "<div class=\"githead\">\n";
-	$crumb = "<a href=\"".sanitized_url()."\">projects</a> / ";
+	$crumb = "<a href=\"" . sanitized_url() . "\">projects</a> / ";
 
 	if (isset($_GET['p'])){
 		$crumb .= html_ahref(array('p'=>$_GET['p'], 'pg'=>"")) . $_GET['p'] ."</a> / ";
@@ -127,11 +127,11 @@ function html_pages() {
 	global $CONFIG;
 	if(isset($_GET['p'])) {
 		html_spacer();
-		$now = floor(time()/15/60); // one hour
+		$now = floor(time() / 15 / 60); // one hour
 		echo "<center>";
-		echo "<a href=\"git.php?p=".$_GET['p']."&tm=$now\">browse</a>";
+		echo "<a href=\"git.php?p=" . $_GET['p'] . "&tm=" . $now . "\">browse</a>";
 		if($CONFIG['git_bundle_active']) {
-			echo " | <a href=\"commit.php?p={$_GET['p']}\">commit</a>";
+			echo " | <a href=\"commit.php?p=" . $_GET['p'] . "\">commit</a>";
 		}
 		echo "</center>";
 	}
@@ -144,11 +144,11 @@ function html_footer()  {
 	echo "<div class=\"gitfooter\">\n";
 
 	if (isset($_GET['p']))  {
-		echo "<a class=\"rss_logo\" href=\"".sanitized_url()."p={$_GET['p']}&dl=rss2\" >RSS</a>\n";
+		echo "<a class=\"rss_logo\" href=\"" . sanitized_url() . "p=" . $_GET['p'] . "&dl=rss2\" >RSS</a>\n";
 	}
 	if ($CONFIG['git_logo'])    {
 		echo "<a href=\"http://www.kernel.org/pub/software/scm/git/docs/\">" . 
-		"<img src=\"".sanitized_url()."dl=git_logo\" style=\"border-width: 0px;\"/></a>\n";
+		"<img src=\"" . sanitized_url() . "dl=git_logo\" style=\"border-width: 0px;\"/></a>\n";
 	}
 
 	echo "</div>\n";
@@ -166,7 +166,7 @@ function sanitized_url() {
 	global $git_embed;
 
 	/* the sanitized url */
-	$url = "{$_SERVER['SCRIPT_NAME']}?";
+	$url = $_SERVER['SCRIPT_NAME'] . "?";
 
 	if (!$git_embed) {
 		return $url;
@@ -179,18 +179,18 @@ function sanitized_url() {
 	foreach ($_GET as $var => $val) {
 		if (!in_array($var, $git_get))   {
 			$get[$var] = $val;
-			$url .= "{$var}={$val}&amp;";
+			$url .= $var . "=" . $val . "&amp;";
 		}
 	}
 	return $url;
 }
 
 function html_spacer($text = "&nbsp;") {
-	echo "<div class=\"gitspacer\">{$text}</div>\n";
+	echo "<div class=\"gitspacer\">" . $text . "</div>\n";
 }
 
 function html_title($text = "&nbsp;") {
-	echo "<div class=\"gittitle\">{$text}</div>\n";
+	echo "<div class=\"gittitle\">" . $text . "</div>\n";
 }
 
 function html_style()   {
@@ -295,7 +295,7 @@ function write_img_png($imgptr) {
 		"\x12\x1c\x9a\xfe\x00\x00\x00\x00\x49\x45\x4e\x44\xae\x42\x60\x82";
 
 	if(!isset($img[$imgptr]['name'])) {
-		$img[$imgptr]['name'] = "{$imgptr}.png";
+		$img[$imgptr]['name'] = $imgptr . ".png";
 	}
 	$filesize = strlen($img[$imgptr]['bin']);
 	header("Pragma: public"); // required
@@ -304,7 +304,7 @@ function write_img_png($imgptr) {
 	header("Cache-Control: private",false); // required for certain browsers
 	header("Content-Transfer-Encoding: binary");
 	header("Content-Type: img/png");
-	header("Content-Length: {$filesize}");
+	header("Content-Length: ". $filesize);
 	header("Content-Disposition: attachment; filename=" . $img[$imgptr]['name'] . ";");
 	header("Expires: +1d");
 	echo $img[$imgptr]['bin'];
