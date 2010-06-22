@@ -41,7 +41,7 @@ function file_stat_get_count($proj, &$today, &$total, $inc, $fbasename) {
 	$rtoday = 0;
 	$rtotal = 0;
 	$now = floor(time()/24/60/60); // number of days since 1970
-	$fname = dirname($proj)."/".$CONFIG['cache_name'].$fbasename."-".basename($proj,".git");
+	$fname = $CONFIG['cache_name'] . "/" . basename($proj) . "/" . $fbasename . "-" . basename($proj, ".git");
 	$fd = 0;
 
 	//$fp1 = sem_get(fileinode($fname), 1);
@@ -74,6 +74,7 @@ function file_stat_get_count($proj, &$today, &$total, $inc, $fbasename) {
 	fseek($file, 0); // rewind the file to beginning
 	fwrite($file, "$fd $rtoday $rtotal\n");
 	fclose($file);
+    chmod($fname, 0666);
 	$today = $rtoday;
 	$total = $rtotal;
 }
