@@ -21,20 +21,16 @@
   // | Foundation, Inc., 59 Temple Place - Suite 330,                         |
   // | Boston, MA  02111-1307, USA.                                           |
   // +------------------------------------------------------------------------+
-  // |                                                                        |
+  // | Author: Zack Bartel <zack@bartel.com>                                  |
   // | Author: Peeter Vois http://people.proekspert.ee/peeter/blog            |
+  // | Author: Xan Manning http://knoxious.co.uk/                             |
   // +------------------------------------------------------------------------+ 
 
-global $title;
+global $CONFIG;
 global $repos; // list of repositories
 global $validargs; // list of allowed arguments
 global $git_embed;
-global $git_css;
-global $git_logo;
-global $http_method_prefix; // prefix path for http clone method
-global $communication_link; // link for sending a message to owner
 global $failedarg;
-global $cache_name;
 global $tags;
 global $branches;
 global $nr_of_shortlog_lines;
@@ -53,7 +49,7 @@ require_once("security.php");
 require_once("html_helpers.php");
 require_once("filestuff.php");
 
-if (!$git_commiting_active) {
+if (!$CONFIG['git_commiting_active']) {
 	die();
 }
 
@@ -70,7 +66,7 @@ if (isset($_GET['dl'])) {
 		write_img_png($_GET['dl']);
 	} else if (in_array($_GET['dl'], $flagdesc, true)) {
 		write_img_png($_GET['dl']);
-	} else if ($_GET['dl'] =="human_check") {
+	} else if ($_GET['dl'] == "human_check") {
 		draw_human_checker(create_secret());
 	}
 }
@@ -100,7 +96,7 @@ function send_the_submit_form() {
 	echo "<table>\n";
 	echo "<tr><td class=\"descol\">Short MEANINGFUL description </td><td class=\"valcol\"><input type=\"text\" name=\"commiter name\" size=\"40\"></td></tr>\n";
 	echo "<tr><td class=\"descol\">Bundle file </td><td class=\"valcol\"><input type=\"file\" name=\"bundle_file\" size=\"40\"></td></tr>\n";
-	echo "<tr><td class=\"descol\">enter the value <img src=\"".sanitized_url()."dl=human_check\"/> here </td><td class=\"valcol\"><input type=\"text\" name=\"check\" size=\"40\"></td></tr>\n";
+	echo "<tr><td class=\"descol\">enter the value <img src=\"" . sanitized_url() . "dl=human_check\"/> here </td><td class=\"valcol\"><input type=\"text\" name=\"check\" size=\"40\"></td></tr>\n";
 	echo "<tr><td class=\"descol\">Submit </td><td class=\"valcol\"><input type=\"submit\" name=\"action\"  value=\"commit\" size=\"10\"></td></tr>\n";
 	echo "</table></div>\n";
 	echo "</form>\n";
@@ -121,7 +117,7 @@ function send_the_help_section_of_submit() {
 }
 
 function send_the_bundles_in_queue() {
-	global $repo_directory, $bundle_name;
+	global $CONFIG;
 	$repo = $_GET['p'];
 	html_spacer();
 	html_title("BUNDLES IN QUEUE");
@@ -131,7 +127,7 @@ function send_the_bundles_in_queue() {
 	$nr = 0;
 	foreach ($bundles as $bdl) {
 		$nr++;
-		echo "<tr><td>$nr</td><td><a href=\"".$bundle_name.$repo."/".$bdl['bdl']."\">".$bdl['bdl']."</a></td><td>".$bdl['name']."</td></tr>\n";
+		echo "<tr><td>$nr</td><td><a href=\"" . $CONFIG['bundle_name'] . $repo . "/" . $bdl['bdl'] . "\">" . $bdl['bdl'] . "</a></td><td>" . $bdl['name'] . "</td></tr>\n";
 	}
 	echo "</table>";
 }
@@ -145,7 +141,7 @@ function send_the_main_page($subpage = 'submit') {
 	html_header();
 	html_style();
 	html_breadcrumbs();
-	html_Title("COMMITTING TO {$_GET['p']}");
+	html_Title("COMMITTING TO " . $_GET['p']);
 	html_pages();
 	switch($subpage) {
 		case 'submit':
@@ -169,38 +165,38 @@ function send_the_main_page($subpage = 'submit') {
 // **************************
 
 function create_bundles_directory() {
-	global $repo_directory, $bundle_name;
+	global $CONFIG;
 	$repo = $_GET['p'];
-	$dname = $repo_directory.$bundle_name."/";
+	$dname = $CONFIG['repo_directory'] . $CONFIG['bundle_name'] . "/";
 	create_directory($dname);
-	return create_directory("{$dname}{$repo}");
+	return create_directory($dname . $repo);
 }
 
 function load_bundles_in_directory() {
-	global $repo_directory, $bundle_name;
+	global $CONFIG['repo_directory'], $CONFIG['bundle_name'];
 	$repo = $_GET['p'];
 	$bundles = array();
-	$dname = "{$repo_directory}{$bundle_name}{$repo}/";
+	$dname = $CONFIG['repo_directory'] . $CONFIG['bundle_name'] . $repo . "/";
 	create_bundles_directory();
 	if ($handle = opendir($dname)) {
 		while (false !== ($fname = readdir($handle))) {
 			if (!is_numeric($fname)) {
 				continue;
 			}
-			$fullpath = "{$dname}{$fname}";
+			$fullpath = $dname . $fname;
 			if (!is_file($fullpath)) {
 				continue;
 			}
-			if (!is_file("{$fullpath}.txt")) {
+			if (!is_file($fullpath . ".txt")) {
 				// the description file must exist too
 				continue;
 			}
 			$record['bdl'] = $fname;
-			$file = fopen("{$fullpath}.txt", "r");
+			$file = fopen($fullpath . ".txt", "r");
 			if (check_new_head_in_bundle($fullpath, $out)) {
 				$record['name'] = fgets($file);
 			} else {
-				$record['name'] = "*** applied *** ".fgets($file);
+				$record['name'] = "*** applied *** " . fgets($file);
 			}
 			fclose($file);
 			$bundles[] = $record;
@@ -211,9 +207,9 @@ function load_bundles_in_directory() {
 }
 
 function save_bundle() {
-	global $repo_directory, $bundle_name, $emailaddress;
+	global $CONFIG['repo_directory'], $CONFIG['bundle_name'], $CONFIG['email_address'];
 	$repo = $_GET['p'];
-	$dname = "{$repo_directory}{$bundle_name}{$repo}/";
+	$dname = $CONFIG['repo_directory'] . $CONFIG['bundle_name'] . $repo . "/";
 	create_bundles_directory();
 	if ($_FILES['bundle_file']['error'] != UPLOAD_ERR_OK) {
 		return false;
@@ -233,10 +229,10 @@ function save_bundle() {
 	chmod("{$fullpath}.txt", 0666);
 	// send e-mail message about the commitment
 	$message = "{$_POST['commiter_name']}\n {$fullpath}\n";
-	$headers = "From: {$emailaddress}\r\n" .
-		"Reply-To: {$emailaddress}\r\n" .
+	$headers = "From: {$CONFIG['email_address']}\r\n" .
+		"Reply-To: {$CONFIG['email_address']}\r\n" .
 		'X-Mailer: PHP/' . phpversion();
-	$ok = mail($emailaddress, "Bundle sent to {$repo}", $message, $headers);
+	$ok = mail($CONFIG['email_address'], "Bundle sent to {$repo}", $message, $headers);
 	if (!$ok) {
 		echo "Error sending email message\n";
 	}
@@ -245,12 +241,12 @@ function save_bundle() {
 
 // check if a tag is in repository
 function check_tag_in_repo($the_tag) {
-	global $repo_directory;
+	global $CONFIG['repo_directory'];
 	$repo=$_GET['p'];
 	$out = array();
 	$nr=0;
 	do {
-		$cmd="GIT_DIR=".escapeshellarg($repo_directory.$repo)." git rev-list --all --full-history --topo-order ";
+		$cmd="GIT_DIR=".escapeshellarg($CONFIG['repo_directory'].$repo)." git rev-list --all --full-history --topo-order ";
 		$cmd .= "--max-count=1000 --skip=" .escapeshellarg($nr) ." ";
 		$cmd .= "--pretty=format:\"";
 		$cmd .= "parents %P%n";

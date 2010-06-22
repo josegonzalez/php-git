@@ -21,8 +21,9 @@
   // | Foundation, Inc., 59 Temple Place - Suite 330,                         |
   // | Boston, MA  02111-1307, USA.                                           |
   // +------------------------------------------------------------------------+
-  // |                                                                        |
+  // | Author: Zack Bartel <zack@bartel.com>                                  |
   // | Author: Peeter Vois http://people.proekspert.ee/peeter/blog            |
+  // | Author: Xan Manning http://knoxious.co.uk/                             |
   // +------------------------------------------------------------------------+ 
 
 function stat_inc_count($proj) {
@@ -36,11 +37,11 @@ function stat_get_count($proj, &$today, &$total, $inc = false) {
 
 // local function (only called from within this file.
 function file_stat_get_count($proj, &$today, &$total, $inc, $fbasename) {
-	global $cache_name, $repo_suffix;
+	global $CONFIG['cache_name'], $CONFIG['repo_suffix'];
 	$rtoday = 0;
 	$rtotal = 0;
 	$now = floor(time()/24/60/60); // number of days since 1970
-	$fname = dirname($proj)."/".$cache_name.$fbasename."-".basename($proj,".git");
+	$fname = dirname($proj)."/".$CONFIG['cache_name'].$fbasename."-".basename($proj,".git");
 	$fd = 0;
 
 	//$fp1 = sem_get(fileinode($fname), 1);
