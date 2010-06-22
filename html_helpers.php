@@ -82,7 +82,7 @@ function html_ref($arguments, $prefix) {
 }
 
 function html_header() {
-	global $CONFIG['repo_title'];
+	global $CONFIG;
 	global $git_embed;
 
 	if (!$git_embed) {
@@ -124,7 +124,7 @@ function html_breadcrumbs() {
 }
 
 function html_pages() {
-	global $CONFIG['git_bundle_active'];
+	global $CONFIG;
 	if(isset($_GET['p'])) {
 		html_spacer();
 		$now = floor(time()/15/60); // one hour
@@ -139,7 +139,7 @@ function html_pages() {
 
 function html_footer()  {
 	global $git_embed;
-	global $CONFIG['git_logo'];
+	global $CONFIG;
 
 	echo "<div class=\"gitfooter\">\n";
 
@@ -194,7 +194,7 @@ function html_title($text = "&nbsp;") {
 }
 
 function html_style()   {
-	global $CONFIG['git_css'];
+	global $CONFIG;
 
 	if (file_exists("style.css")) {
 		echo "<link rel=\"stylesheet\" href=\"style.css\" type=\"text/css\" />\n";
