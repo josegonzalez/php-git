@@ -139,10 +139,10 @@ function hacker_gaught($mess = "") {
 	header("Content-Type: text/plain");
 	echo "please, do not attack.\n";
 	echo "this site is not your enemy.\n\n";
-	echo "the failed argument is $failedarg.\n";
-	echo "$mess \n";
+	echo "the failed argument is " . $failedarg . ".\n";
+	echo $mess . " \n";
 	foreach ($validargs as $va) {
-		echo "$va\n";
+		echo $va . "\n";
 	}
 	die();
 }

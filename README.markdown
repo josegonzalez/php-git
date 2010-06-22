@@ -27,14 +27,6 @@ Git-PHP is a port of gitweb to PHP. It includes various functionality, such as s
 			
 	$repo_directory-\
 			|
-			+-.temp\
-					|
-					+-cache
-					|
-					+-bundles
-					|
-					+-secrets
-			|
 			+-project1\.git
 			|
 			+-project2\.git

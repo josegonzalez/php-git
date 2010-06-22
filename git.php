@@ -1413,7 +1413,7 @@ function draw_slice($dirname, $commit, $x, $y, $parents, $pin, $vin) {
 
 	imagefilledellipse($im, $x * $w + $wo, $ho, $r, $r, $fillcolor);
 	imageellipse($im, $x * $w + $wo, $ho, $r, $r, $color);
-	$filename = $dirname . "/ graph-" . $commit . ".png";
+	$filename = $dirname . "/graph-" . $commit . ".png";
 	imagepng($im, $filename);
 	chmod($filename, 0777);
 	//chgrp($filename, intval(filegroup($CONFIG['repo_directory'])));
