@@ -37,7 +37,7 @@ function stat_get_count($proj, &$today, &$total, $inc = false) {
 
 // local function (only called from within this file.
 function file_stat_get_count($proj, &$today, &$total, $inc, $fbasename) {
-	global $CONFIG['cache_name'], $CONFIG['repo_suffix'];
+	global $CONFIG;
 	$rtoday = 0;
 	$rtotal = 0;
 	$now = floor(time()/24/60/60); // number of days since 1970
