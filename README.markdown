@@ -16,6 +16,16 @@ Git-PHP is a port of gitweb to PHP. It includes various functionality, such as s
 
 ### Supposed directory structure:
 	git-php-\
+		|
+			+-.temp\
+					|
+					+-cache
+					|
+					+-bundles
+					|
+					+-secrets
+			
+	$repo_directory-\
 			|
 			+-.temp\
 					|
@@ -24,7 +34,6 @@ Git-PHP is a port of gitweb to PHP. It includes various functionality, such as s
 					+-bundles
 					|
 					+-secrets
-	$repo_directory-\
 			|
 			+-project1\.git
 			|

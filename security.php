@@ -196,24 +196,16 @@ function draw_human_checker($amessage) {
 
 	$im = imagecreate($w, $h);
 	$cvar[0] = imagecolorallocate($im, 255, 255, 255);
-	$cvar[1] = imagecolorallocate($im, 200,   0,   0);
-	$cvar[2] = imagecolorallocate($im,   0, 200,   0);
-	$cvar[3] = imagecolorallocate($im,   0,   0, 200);
-	$cvar[4] = imagecolorallocate($im,   0,   0,   0);
-
-	$col1 = rand(0,4);
-	do {
-		$col2 = rand(0,4);
-	} while ($col1 == $col2);
+	$cvar[1] = imagecolorallocate($im, 0,   0,   0);
 
 	//echo "$fh,$fw";
 	//die();
 
-	imagefill($im, 0, 0, $cvar[$col1]);
+	imagefill($im, 0, 0, $cvar[0]);
 
 	for ($i=0; $i<$ml; $i++) {
 		$m = "$amessage[$i]";
-		imagestring($im, 5, $i*$fw+rand(0,4), rand(0,12)-3, $m, $cvar[$col2]);
+		imagestring($im, 5, $i*$fw+rand(0,4), rand(0,12)-3, $m, $cvar[1]);
 	}
 
 	$n = $fw*$h*$prob / 100;
@@ -223,9 +215,9 @@ function draw_human_checker($amessage) {
 			$y = rand(0,$h-1);
 			$idx = imagecolorat($im, $x, $y);
 			if ($idx == $col1) {
-				imagesetpixel($im,$x,$y,$cvar[$col2]);
+				imagesetpixel($im,$x,$y,$cvar[1]);
 			} else {
-				imagesetpixel($im,$x,$y,$cvar[$col1]);
+				imagesetpixel($im,$x,$y,$cvar[0]);
 			}
 		}
 	}

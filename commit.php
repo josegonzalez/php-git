@@ -35,6 +35,9 @@ global $tags;
 global $branches;
 global $nr_of_shortlog_lines;
 
+if(!@$_GET['p'] && !@$_GET['dl'])
+    header('Location: git.php');
+
 global $keepurl; //the arguments that must be resent
 
 //repos could be made by an embeder script
@@ -173,7 +176,7 @@ function create_bundles_directory() {
 }
 
 function load_bundles_in_directory() {
-	global $CONFIG['repo_directory'], $CONFIG['bundle_name'];
+	global $CONFIG;
 	$repo = $_GET['p'];
 	$bundles = array();
 	$dname = $CONFIG['repo_directory'] . $CONFIG['bundle_name'] . $repo . "/";
@@ -207,7 +210,7 @@ function load_bundles_in_directory() {
 }
 
 function save_bundle() {
-	global $CONFIG['repo_directory'], $CONFIG['bundle_name'], $CONFIG['email_address'];
+	global $CONFIG;
 	$repo = $_GET['p'];
 	$dname = $CONFIG['repo_directory'] . $CONFIG['bundle_name'] . $repo . "/";
 	create_bundles_directory();
@@ -241,7 +244,7 @@ function save_bundle() {
 
 // check if a tag is in repository
 function check_tag_in_repo($the_tag) {
-	global $CONFIG['repo_directory'];
+	global $CONFIG;
 	$repo = $_GET['p'];
 	$out = array();
 	$nr=0;
@@ -296,9 +299,9 @@ function check_new_head_in_bundle($what, &$out1) {
 // returns true if bundle does apply to the database
 // returns false if the bunlde does not apply to the database
 function check_verify_bundle() {
-	$success=true;
-	$repo=$_GET['p'];
-	$what=$_FILES['bundle_file']['tmp_name'];
+	$success = true;
+	$repo = $_GET['p'];
+	$what = $_FILES['bundle_file']['tmp_name'];
 	$out1 = array();
 	if ($success) {
 		$success = $success && check_new_head_in_bundle($what, $out1);
