@@ -52,6 +52,9 @@ if (!is_array($repos)) {
 if (!is_array($validargs)){
   $validargs = array();
 }
+
+system_load_checks();
+
 security_load_repos();
 security_test_repository_arg();
 security_load_names();
