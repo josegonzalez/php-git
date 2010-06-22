@@ -26,6 +26,12 @@
   // | Author: Xan Manning http://knoxious.co.uk/                             |
   // +------------------------------------------------------------------------+ 
 
+function system_load_checks() {
+    if(!extension_loaded('gd') || !function_exists('gd_info')) {
+            die('You are required to have GD installed. Please contact your administrator!');
+        }
+   }
+
 function security_load_repos() {
 	global $CONFIG, $validargs, $repos;
 
