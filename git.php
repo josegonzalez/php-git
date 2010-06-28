@@ -35,6 +35,7 @@ global $failedarg;
 global $tags;
 global $branches;
 global $nr_of_shortlog_lines;
+global $geshi;
 
 global $keepurl; //the arguments that must be resent
 
@@ -43,6 +44,7 @@ require_once("security.php");
 require_once("html_helpers.php");
 require_once("statis.php");
 require_once("filestuff.php");
+require_once("geshifunc.php");
 
 $keepurl = array();
 
@@ -59,6 +61,7 @@ system_load_checks();
 security_load_repos();
 security_test_repository_arg();
 security_load_names();
+geshi_init();
 
 if (isset($_GET['p'])) {
 	// increase statistic counters
@@ -77,7 +80,7 @@ if (isset($_GET['p'])) {
 // add some keywords to valid array
 $arrowdesc = array('none', 'up', 'down');
 $validargs = array_merge($validargs,
-	array("targz", "zip", "plain", "dlfile", "rss2", "commitdiff", "jump_to_tag", "GO", "SET", "HEAD",),
+	array("targz", "plain", "dlfile", "image", "rss2", "commitdiff", "jump_to_tag", "GO", "SET", "HEAD",),
 	$icondesc, $arrowdesc);
 
 security_test_arg();
@@ -107,78 +110,123 @@ if ($nr_of_shortlog_lines > 512 || $nr_of_shortlog_lines < 0 || !is_numeric($nr_
 	$nr_of_shortlog_lines = 20;
 }
 
-$extEnscript = array(
-	// '.svg'     => 'sml',
-	'.ada'     => 'ada',
-	'.adb'     => 'ada',
-	'.ads'     => 'ada',
-	'.awk'     => 'awk',
-	'.c'       => 'c',
-	'.c++'     => 'cpp',
-	'.cc'      => 'cpp',
-	'.cpp'     => 'cpp',
-	'.csh'     => 'csh',
-	'.cxx'     => 'cpp',
-	'.diff'    => 'diffu',
-	'.dpr'     => 'delphi',
-	'.e'       => 'eiffel',
-	'.el'      => 'elisp',
-	'.eps'     => 'postscript',
-	'.f'       => 'fortran',
-	'.for'     => 'fortran',
-	'.gs'      => 'haskell',
-	'.h'       => 'c',
-	'.hpp'     => 'cpp',
-	'.hs'      => 'haskell',
-	'.htm'     => 'html',
-	'.html'    => 'html',
-	'.idl'     => 'idl',
-	'.java'    => 'java',
-	'.js'      => 'javascript',
-	'.lgs'     => 'haskell',
-	'.lhs'     => 'haskell',
-	'.m'       => 'objc',
-	'.m4'      => 'm4',
-	'.man'     => 'nroff',
-	'.nr'      => 'nroff',
-	'.p'       => 'pascal',
-	'.pas'     => 'delphi',
-	'.patch'   => 'diffu',
-	'.pkg'     => 'sql', 
-	'.pl'      => 'perl',
-	'.pm'      => 'perl',
-	'.pp'      => 'pascal',
-	'.ps'      => 'postscript',
-	'.s'       => 'asm',
-	'.scheme'  => 'scheme',
-	'.scm'     => 'scheme',
-	'.scr'     => 'synopsys',
-	'.sh'      => 'sh',
-	'.shtml'   => 'html',
-	'.sql'     => 'sql',
-	'.st'      => 'states',
-	'.syn'     => 'synopsys',
-	'.synth'   => 'synopsys',
-	'.tcl'     => 'tcl',
-	'.tex'     => 'tex',
-	'.texi'    => 'tex',
-	'.texinfo' => 'tex',
-	'.v'       => 'verilog',
-	'.vba'     => 'vba',
-	'.vh'      => 'verilog',
-	'.vhd'     => 'vhdl',
-	'.vhdl'    => 'vhdl',
-	'.py'      => 'python',
+$extGeSHi = array(
+'.as'		    => 'actionscript',		#ActionScript
+'.ada'		    => 'ada',			    #Ada 
+'.scpt'		    => 'applescript',		#AppleScript 
+'.applescript'	=> 'applescript',	    #AppleScript 
+'.list'		    => 'apt_sources',		#Apt sources 
+'.asm'		    => 'asm',			    #ASM 
+'.asp'		    => 'asp',			    #ASP 
+'.autoconf' 	=> 'autoconf',			#Autoconf 
+'.afk'		    => 'autohotkey',		#Autohotkey 
+'.au3'		    => 'autoit',			#AutoIt 
+'.avs'		    => 'avisynth',			#AviSynth 
+'.awk'		    => 'awk',			    #awk 
+'.sh'	    	=> 'bash',			    #Bash 
+'.bgm'	    	=> 'basic4gl',		    #Basic4GL 
+'.bib'	    	=> 'bibtex',			#BibTeX
+'.bibtex'   	=> 'bibtex',			#BibTeX 
+'.bb'		    => 'blitzbasic',		#BlitzBasic 
+'.bnf'	    	=> 'bnf',			    #bnf 
+'.boo'		    => 'boo',			    #Boo 
+'.c'		    => 'c',				    #C 
+'.h'		    => 'c',				    #C 
+'.dcl'		    => 'caddcl',			#CAD DCL 
+'.cfm'		    => 'cfm',			    #ColdFusion
+'.cfml'		    => 'cfm',			    #ColdFusion 
+'.clj'		    => 'clojure',			#Clojure 
+'.cmake'	    => 'cmake',			    #CMake 
+'.cbl'		    => 'cobol',			    #COBOL 
+'.cpp'		    => 'cpp',			    #C++
+'.hpp'		    => 'cpp',			    #C++
+'.cc'		    => 'cpp',			    #C++
+'.c++'		    => 'cpp',			    #C++ 
+'.cxx'		    => 'cpp',			    #C++ 
+'.csh'		    => 'csharp',			#C# 
+'.css'		    => 'css',			    #CSS 
+'.cue'		    => 'cuesheet',			#Cuesheet 
+'.d'		    => 'd',				    #D 
+'.dpr'		    => 'delphi',			#Delphi 
+'.diff'		    => 'diff',			    #Diff 
+'.patch'	    => 'diff',		    	#Diff 
+'.dot'		    => 'dot',		    	#dot 
+'.es'		    => 'ecmascript',		#ECMAScript 
+'.e'		    => 'eiffel',			#Eiffel 
+'.erl'		    => 'erlang',			#Erlang 
+'.f'		    => 'fortran',			#Fortran 
+'.for'		    => 'fortran',			#Fortran 
+'.f#'		    => 'fsharp',			#F# 
+'.4gl'		    => 'genero',			#genero 
+'.gml'		    => 'gml',		    	#GML 
+'.plt'		    => 'gnuplot',			#Gnuplot 
+'.groovy'	    => 'groovy',			#Groovy 
+'.gs'		    => 'haskell',			#Haskell 
+'.lgs'		    => 'haskell',			#Haskell 
+'.lhs'		    => 'haskell',			#Haskell 
+'.html'		    => 'html4strict',		#HTML
+'.htm'		    => 'html4strict',		#HTML 
+'.xhtml'	    => 'html4strict',		#HTML 
+'.shtml'	    => 'html4strict',		#HTML 
+'.ini'		    => 'ini',		    	#INI 
+'.io'		    => 'io',		    	#Io 
+'.java'		    => 'java',		    	#Java 
+'.js'		    => 'javascript',    	#Javascript 
+'.latex'	    => 'latex',		    	#LaTeX 
+'.tex'		    => 'latex',		    	#LaTeX 
+'.lsp'		    => 'lisp',		    	#Lisp 
+'.lisp'		    => 'lisp',		    	#Lisp 
+'.lol'		    => 'lolcode',			#LOLcode 
+'.lss'		    => 'lotusscript',		#LotusScript 
+'.lua'		    => 'lua',		    	#Lua 
+'.mrc'		    => 'mirc',		    	#mIRC Scripting 
+'.mxml'		    => 'mxml',		    	#MXML 
+'.nsi'		    => 'nsis',		    	#NSIS 
+'.nsh'		    => 'nsis',		    	#NSIS 
+'.m'		    => 'objc',		    	#Objective-C 
+'.oz'		    => 'oz',		    	#OZ 
+'.p'		    => 'pascal',			#Pascal
+'.pp'		    => 'pascal',			#Pascal 
+'.pl'		    => 'perl',		    	#Perl
+'.pm'		    => 'perl',		    	#Perl
+'.php'		    => 'php',		    	#PHP
+'.phtml'	    => 'php',			    #PHP 
+'.phps'		    => 'php',			    #PHP 
+'.php3'		    => 'php',			    #PHP 
+'.php4'		    => 'php',			    #PHP 
+'.php5'		    => 'php',			    #PHP 
+'.php6'		    => 'php',			    #PHP 
+'.pov'		    => 'povray',			#POVRAY 
+'.ps1'		    => 'powershell',		#PowerShell 
+'.py'		    => 'python',			#Python 
+'.pyw'		    => 'python',			#Python 
+'.pyc'		    => 'python',			#Python 
+'.pyo'		    => 'python',			#Python 
+'.pyd'		    => 'python',			#Python 
+'.reg'		    => 'reg',			    #Microsoft Registry 
+'.r'            => 'rsplus',            #R/SPlus
+'.spec'		    => 'rpmspec',			#RPM Specification File 
+'.rb'		    => 'ruby',			    #Ruby 
+'.rbw'		    => 'ruby',			    #Ruby 
+'.scheme'	    => 'scheme',			#Scheme 
+'.scm'		    => 'scheme',			#Scheme 
+'.smarty'	    => 'smarty',			#Smarty 
+'.tpl'		    => 'smarty',			#Smarty 
+'.sql'		    => 'sql',			    #SQL 
+'.tcl'		    => 'tcl',			    #TCL 
+'.vb'		    => 'vb',			    #Visual Basic 
+'.vbs'		    => 'vbnet',			    #vb.net 
+'.vim'		    => 'vim',			    #Vim Script 
+'.bat'		    => 'winbatch',			#Winbatch  
+'.cmd'		    => 'winbatch',			#Winbatch 
 
-	// The following are handled internally, since there's no
-	// support for them in Enscript
- 
-	'.php'     => 'php',
-	'.phtml'   => 'php',
-	'.php3'    => 'php',
-	'.php'     => 'php'
+/* The following are images and need to be displayed as such! */
+'.png'          => 'image',             # PNG Image
+'.jpg'          => 'image',             # JPEG Image
+'.jpeg'          => 'image',            # JPEG Image
+'.gif'          => 'image',             # GIF Image
+'.bmp'          => 'image'              # Bitmap Image
 );
-
 
 if (!isset($git_embed) && $git_embed != true) {
   $git_embed = false;
@@ -187,10 +235,10 @@ if (!isset($git_embed) && $git_embed != true) {
 if (isset($_GET['dl'])) {
 	if ($_GET['dl'] == 'targz') {
 		write_targz(get_repo_path($_GET['p']));
-	} elseif ($_GET['dl'] == 'zip') {
-		write_zip(get_repo_path($_GET['p']));
 	} elseif ($_GET['dl'] == 'plain') {
 		write_plain();
+    } elseif ($_GET['dl'] == 'image') {
+        cache_image($_GET['p'], $_GET['b'], $_GET['n']);
 	} elseif (in_array($_GET['dl'], $icondesc, true)) {
 		write_img_png($_GET['dl']);
 	} elseif ($_GET['dl'] == 'dlfile') {
@@ -267,7 +315,7 @@ function html_help($proj) {
 	echo "<div id=\"git-help\">\n";
 	echo "<table>\n";
 	echo "<tr><td>To clone: </td><td>git clone ";
-	echo $CONFIG['http_method_prefix'];
+	echo $CONFIG['git_method_prefix'];
 	echo $proj . " yourpath</td></tr>\n";
 	echo "<tr><td>To communicate: </td><td><a href=\"" . $CONFIG['communication_link'] . "\">Visit this page</a></td></tr>";
 	echo "</table>\n";
@@ -275,12 +323,13 @@ function html_help($proj) {
 }
 
 function html_blob($proj, $blob) {
-	global $extEnscript, $CONFIG;
+	global $extGeSHi, $CONFIG;
 	$repopath = get_repo_path($proj);
 	$out = array();
 	$name = $_GET['n'];
+    $name_c = strtolower($name);
 	$plain = html_ahref(array('p' => $proj, 'dl' => "plain", 'h' => $blob, 'n' => $name)) . "plain</a>";
-	$ext =@ $extEnscript[strrchr($name,".")];
+	$ext =@ $extGeSHi[strrchr($name_c, ".")];
 	echo "<div style=\"float:right;padding:7px;\">" . $plain . "</div>\n";
 	//echo "$ext";
 	echo "<div class=\"gitcode\">\n";
@@ -288,21 +337,20 @@ function html_blob($proj, $blob) {
 		//echo "nonhighlight!";
 		$cmd = "GIT_DIR=" . escapeshellarg($repopath . $CONFIG['repo_suffix']) . " git cat-file blob " . escapeshellarg($blob) . " 2>&1";
 		exec($cmd, &$out);
-		$out = "<PRE>" . htmlspecialchars(implode("\n", $out)) . "</PRE>";
-		echo "$out";
-		//$out = highlight_string($out);
-	} elseif ($ext == "php") {
-		$cmd = "GIT_DIR=" . escapeshellarg($repopath . $CONFIG['repo_suffix']) . " git cat-file blob " . escapeshellarg($blob) . " 2>&1";
-		exec($cmd, &$out);
-		//$out = "<PRE>".htmlspecialchars(implode("\n",$out))."</PRE>";
-		highlight_string(implode("\n",$out));
-	} else {
+		$out = "<pre>" . htmlspecialchars(implode("\n", $out)) . "</pre>";
+		echo $out;
+	} elseif($ext == "image") {
+        //echo "image";
+        echo "<img src=\"" . sanitized_url() . "dl=image&p=" . $proj . "&b=" . $blob . "&n=" . $name . "\" />";
+    } else {
 		//echo "highlight";
 		$result = 0;
 		$cmd = "GIT_DIR=" . escapeshellarg($repopath . $CONFIG['repo_suffix']) . " git cat-file blob " . escapeshellarg($blob) .
-			" 2>&1 | enscript --language=html --color=1 --highlight=" . escapeshellarg($ext) . " -o - | sed -n \"/<PRE/,/<\\/PRE/p\" ";
+			" 2>&1";
 		exec($cmd, &$out);
 		$out = implode("\n", $out);
+        $out = geshi_highlight($out, $ext);
+        $out = geshi_style() . $out;
 		echo $out;
 	}
 	echo "</div>\n";
@@ -315,14 +363,17 @@ function html_diff($proj, $commit) {
 	$c['parent'] = $_GET['hb'];
 	$out = array();
 	exec("GIT_DIR=" . escapeshellarg($repopath . $CONFIG['repo_suffix']) . " git diff " . escapeshellarg($c['parent']) . " " .
-	     escapeshellarg($commit) . " 2>&1 | enscript --language=html --color=1 --highlight=diffu -o - | sed -n \"/<PRE/,/<\\/PRE/p\"  ", &$out);
+	     escapeshellarg($commit) . " 2>&1", &$out);
+    $out = implode("\n", $out);
+    $out = geshi_highlight($out, 'diff');
+    $out = geshi_style() . $out;
 	echo "<div class=\"gitcode\">\n";
-	echo implode("\n", $out);
+	echo $out;
 	echo "</div>\n";
 }
 
 function html_tree($proj, $tree) {
-	global $extEnscript;
+	global $extGeSHi;
 	$t = git_ls_tree(get_repo_path($proj), $tree);
 
 	echo "<div class=\"gitbrowse\">\n";
@@ -340,9 +391,11 @@ function html_tree($proj, $tree) {
 			$plain = html_ahref(array('p' => $proj, 'dl' => "plain", 'h' => $obj['hash'], 'n' => $obj['file'])) . "plain</a>";
 			$dlfile = " | " . html_ahref(array('p' => $proj, 'dl' => "dlfile", 'h' => $obj['hash'], 'n' => $obj['file'])) . "file</a>";
 			$objlink = html_ahref(array('p' => $proj, 'a' => "jump_to_tag", 'b' => $obj['hash'], 'n' => $obj['file']), "blob") . $obj['file'] . "</a>\n";
-			$ext = @$extEnscript[strrchr($obj['file'], ".")];
+			$ext = @$extGeSHi[strrchr($obj['file'], ".")];
 			if ($ext == "") {
 				$icon = "<img src=\"" . sanitized_url() . "dl=icon_plain\" style=\"border-width: 0px;\"/>";
+            } elseif ($ext == "image") {
+                $icon = "<img src=\"" . sanitized_url() . "dl=icon_image\" style=\"border-width: 0px;\"/>";
 			} else {
 				$icon = "<img src=\"" . sanitized_url() . "dl=icon_color\" style=\"border-width: 0px;\"/>";
 			}
@@ -450,7 +503,7 @@ function html_shortlog($proj, $lines) {
 			}
 		}
 		echo $mess;
-		echo "</td><td>{$diff} | {$tree} | " . get_project_link($proj, "targz", $cid) . " | " . get_project_link($proj, "zip", $cid) . "</td></tr>\n"; 
+		echo "</td><td>{$diff} | {$tree} | " . get_project_link($proj, "targz", $cid) . "</td></tr>\n"; 
 		if ($_GET['a'] == "commitdiff") {
 			echo "<tr class=\"inl\"><td>-</td></tr>\n";
 		}
@@ -562,13 +615,12 @@ function html_home() {
 	echo "</tr>\n";
 	foreach ($repos as $repo) {
 		$today = 0; $total = 0; stat_get_count($repo, $today, $total);
-		$desc = short_desc(file_get_contents($repo . $CONFIG['repo_suffix'] . "/description"));
+		$desc = short_desc(file_get_contents($repo . $CONFIG['repo_suffix'] . "description"));
 		$owner = get_file_owner($repo);
 		$last =  get_last($repo);
 		$proj = get_project_link($repo);
 		$dlt = get_project_link($repo, "targz");
-		$dlz = get_project_link($repo, "zip");
-		echo "<tr><td>" . $proj . "</td><td>" . $desc . "</td><td>" . $owner . "</td><td>" . $last . "</td><td>" . $dlt ." | " . $dlz . "</td><td> (" . $today . " / " . $total . ") </td></tr>\n";
+		echo "<tr><td>" . $proj . "</td><td>" . $desc . "</td><td>" . $owner . "</td><td>" . $last . "</td><td>" . $dlt ."</td><td> (" . $today . " / " . $total . ") </td></tr>\n";
 	}
 	echo "</table>";
 	echo "</div>\n";
@@ -610,9 +662,7 @@ function get_project_link($repo, $type = false, $tag="HEAD") {
 	if (!$type) {
 		return "<a href=\"" . sanitized_url() . "p=" . $path . "\">" . $path . "</a>";
 	} elseif ($type == "targz") {
-		return html_ahref(array('p' => $path, 'dl'=>'targz', 'h' => $tag)) . ".tar.gz</a>";
-	} elseif ($type == "zip") {
-		return html_ahref(array('p' => $path, 'dl'=>'zip', 'h' => $tag)) . ".zip</a>";
+		return html_ahref(array('p' => $path, 'dl'=>'targz', 'h' => $tag)) . "snapshot</a>";
 	}
 }
 
@@ -671,7 +721,7 @@ function git_ls_tree($repopath, $tree) {
 
 	foreach ($out as $line) {
 		$entry = array();
-		$arr = explode(" ", $line);
+		$arr = explode(" ", $line, 4);
 		$entry['perm'] = $arr[0];
 		$entry['type'] = $arr[1];
 		$entry['hash'] = $arr[2];
@@ -733,7 +783,7 @@ function write_targz($repo) {
 		escapeshellarg($proj . "-" . $head . ".tar.gz") . " " . escapeshellarg($proj));
 	exec("rm -Rf " . escapeshellarg("/tmp/" . $proj));
 
-	$filesize = filesize($proj . "-" . $head . ".tar.gz");
+	$filesize = filesize("/tmp/" . $proj . "-" . $head . ".tar.gz");
 	header("Pragma: public"); // required
 	header("Expires: 0");
 	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
@@ -743,30 +793,6 @@ function write_targz($repo) {
 	header("Content-Length: " . $filesize);
 	header("Content-Disposition: attachment; filename=\"" . $proj . "-" . $head . ".tar.gz\";");
 	readfile("/tmp/" . $proj . "-" . $head . ".tar.gz");
-	die();
-}
-
-function write_zip($repo) {
-	global $CONFIG;
-	$p = basename($repo);
-	$head = hash_to_tag($_GET['h']);
-	$proj = explode(".", $p);
-	$proj = $proj[0]; 
-	exec("cd /tmp && git-clone " . escapeshellarg($repo) . " " . escapeshellarg($proj) . " && cd " .
-		escapeshellarg($proj) . " && git-checkout " . escapeshellarg($head) . " && cd /tmp && rm -Rf " . escapeshellarg("/tmp/" . $proj . "/.git").
-		" && zip -r " . escapeshellarg($proj . "-" . $head . ".zip") . " " . escapeshellarg($proj));
-	exec("rm -Rf " . escapeshellarg("/tmp/" . $proj));
-
-	$filesize = filesize("/tmp/" . $proj . "-" . $head . ".zip");
-	header("Pragma: public"); // required
-	header("Expires: 0");
-	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-	header("Cache-Control: private", false); // required for certain browsers
-	header("Content-Transfer-Encoding: binary");
-	header("Content-Type: application/x-zip");
-	header("Content-Length: " . $filesize );
-	header("Content-Disposition: attachment; filename=\"" . $proj . "-" . $head . ".zip\";");
-	readfile("/tmp/" . $proj . "-" . $head . ".zip");
 	die();
 }
 

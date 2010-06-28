@@ -170,16 +170,29 @@ function send_the_main_page($subpage = 'submit') {
 function create_bundles_directory() {
 	global $CONFIG;
 	$repo = $_GET['p'];
-	$dname = $CONFIG['repo_directory'] . $CONFIG['bundle_name'] . "/";
+	$dname = $CONFIG['bundle_directory'] . "/";
 	create_directory($dname);
 	return create_directory($dname . $repo);
+}
+
+function get_file_owner($repopath) {
+	//$s = stat($path);
+	//print_r($s);
+	//$pw = posix_getpwuid($s['uid']);
+	//echo("owner1");
+	//return preg_replace("/[,;]/", "", $pw["gecos"]);
+	global $CONFIG;
+	$out = array();
+	$cmd = "GIT_DIR=" . escapeshellarg($repopath . $CONFIG['repo_suffix']) . " git rev-list  --header --max-count=1 HEAD 2>&1 | grep -a committer | cut -d' ' -f2-3";
+	$own = exec($cmd, &$out);
+	return $own;
 }
 
 function load_bundles_in_directory() {
 	global $CONFIG;
 	$repo = $_GET['p'];
 	$bundles = array();
-	$dname = $CONFIG['repo_directory'] . $CONFIG['bundle_name'] . $repo . "/";
+	$dname = $CONFIG['bundle_directory'] . $repo . "/";
 	create_bundles_directory();
 	if ($handle = opendir($dname)) {
 		while (false !== ($fname = readdir($handle))) {
@@ -212,7 +225,7 @@ function load_bundles_in_directory() {
 function save_bundle() {
 	global $CONFIG;
 	$repo = $_GET['p'];
-	$dname = $CONFIG['repo_directory'] . $CONFIG['bundle_name'] . $repo . "/";
+	$dname = $CONFIG['bundle_directory'] . $repo . "/";
 	create_bundles_directory();
 	if ($_FILES['bundle_file']['error'] != UPLOAD_ERR_OK) {
 		return false;

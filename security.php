@@ -27,9 +27,13 @@
   // +------------------------------------------------------------------------+ 
 
 function system_load_checks() {
-    if(!extension_loaded('gd') || !function_exists('gd_info')) {
-            die('You are required to have GD installed. Please contact your administrator!');
-        }
+       global $CONFIG;
+        if(!extension_loaded('gd') || !function_exists('gd_info')) {
+                die('You are required to have GD installed. Please contact your administrator!');
+            }
+        if(!file_exists($CONFIG['geshi_directory'])) {
+                die('<a href="http://qbnz.com/highlighter/">GeSHi</a> is required! "' . $CONFIG['geshi_directory'] . '" Not found!');
+            }
    }
 
 function security_load_repos() {
@@ -40,12 +44,18 @@ function security_load_repos() {
 			while (false !== ($file = readdir($handle))) {
 				$fullpath = $CONFIG['repo_directory'] . $file;
 				//printf("%s,%d\n", $file, is_dir($CONFIG['repo_directory'] . "/" . $file));
-				if ($file[0] != '.' && is_dir($fullpath)) {
-					if (is_dir($fullpath . $CONFIG['repo_suffix'])) {
-						/* TODO: Check for valid git repos */
-						// fill the security array.
-						$validargs[] = trim($file);
-						$repos[] = trim($fullpath . "/");
+				if($file[0] != '.' && is_dir($fullpath)) {
+                   if(is_dir($fullpath . $CONFIG['repo_suffix'])) {
+                                
+                                $headFile = "HEAD";
+
+                                if(substr($CONFIG['repo_suffix'], -1) != "/")
+                                    $headFile = "/" . $headFile;
+
+				                if(file_exists($fullpath . $CONFIG['repo_suffix'] . $headFile) && get_file_owner($fullpath) != NULL) {
+                                    $validargs[] = trim($file);
+				                    $repos[] = trim($fullpath . "/");
+                                }
 					}
 				}
 			}
@@ -96,7 +106,7 @@ function security_load_names() {
 		$cmd = "GIT_DIR=" . get_repo_path($proj) . $CONFIG['repo_suffix'] . " git ls-tree -r -t " . escapeshellarg($head) . " 2>&1 | sed -e 's/\t/ /g'";
 		exec($cmd, &$out);
 		foreach ($out as $line) {
-			$arr = explode(" ", $line);
+			$arr = explode(" ", $line, 4);
 			//$validargs[] = $arr[2]; // add the hash to valid array
 			$validargs[] = basename($arr[3]); // add the file name to valid array
 		}
@@ -234,7 +244,7 @@ function draw_human_checker($amessage) {
 function create_secrets_directory() {
 	global $CONFIG;
 
-	$dname = $CONFIG['repo_directory'] . $CONFIG['secret_name'];
+	$dname = $CONFIG['secret_directory'];
 	if (create_directory($dname) == false) return false;
 	/* TODO: This is Apache-specific. How to generalize? */
 	$file = fopen($dname . ".htaccess", "w"); 
@@ -253,8 +263,8 @@ function create_secret() {
 	$secret = "";
 
 	create_secrets_directory();
-	do{ $secret = create_random_message(9); }while (file_exists($CONFIG['repo_directory'] . $CONFIG['secret_name'] . $secret));
-	$file = fopen($CONFIG['repo_directory'] . $CONFIG['secret_name'] . $secret, "w");
+	do{ $secret = create_random_message(9); }while (file_exists($CONFIG['secret_directory'] . $secret));
+	$file = fopen($CONFIG['secret_directory'] . $secret, "w");
 	fwrite($file, "$now");
 	fclose($file);
 	return $secret;
@@ -264,7 +274,7 @@ function clean_up_secrets() {
 	global $CONFIG;
 	$now = floor(time()/60/60); // number hours since 1970
 	create_secrets_directory();
-	if ($handle = opendir($CONFIG['repo_directory'] . $CONFIG['secret_name'])) {
+	if ($handle = opendir($CONFIG['secret_directory'])) {
 		while (false !== ($fname = readdir($handle))) {
 			if (!is_numeric($fname)) continue;
 			$fullpath = $CONFIG['repo_directory'] . $CONFIG['secret_name'] . $fname;
@@ -288,7 +298,7 @@ function check_secret($fname) {
 		die(); // dangerously wrong secret
 	}
 
-	$fullpath = $CONFIG['repo_directory'] . $CONFIG['secret_name'] . $fname;
+	$fullpath = $CONFIG['secret_directory'] . $fname;
 	if (!file_exists($fullpath)) {
 		// wrong secret
 		return false;
