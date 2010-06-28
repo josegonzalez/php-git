@@ -25,6 +25,8 @@ div#git-help > table td { padding: 5px 5px 5px 12px; }
 div#git-description > table td { padding: 5px 5px 5px 12px; }
 div#git-description > table { margin-top: 15px; }
 div.gitbrowse > table td { padding: 5px 5px 5px 25px; }
+img#image_blob { max-width: 600px; height: auto; }
+img#image_blob { max-height: 600px; width: auto; }
 tr:hover { background-color: #FFFFE1; }
 div.gitbrowse a.blob { text-decoration: none; }
 div.gitcode { padding: 10px; }
