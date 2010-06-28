@@ -341,7 +341,7 @@ function html_blob($proj, $blob) {
 		echo $out;
 	} elseif($ext == "image") {
         //echo "image";
-        echo "<img src=\"" . sanitized_url() . "dl=image&p=" . $proj . "&b=" . $blob . "&n=" . $name . "\" id=\"image_blob\" />";
+        echo "<a href=\"" . sanitized_url() . "dl=image&p=" . $proj . "&b=" . $blob . "&n=" . $name . "\"><img src=\"" . sanitized_url() . "dl=image&p=" . $proj . "&b=" . $blob . "&n=" . $name . "\" id=\"image_blob\" /></a>";
     } else {
 		//echo "highlight";
 		$result = 0;
