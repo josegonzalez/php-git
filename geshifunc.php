@@ -2,7 +2,7 @@
 
   /* vim: set expandtab tabstop=4 shiftwidth=4 foldmethod=marker: */
   // +------------------------------------------------------------------------+
-  // | git-php - PHP front end to git repositories                            |
+  // | git-php - PHP front end to git repositories   [GeSHi Patch]            |
   // +------------------------------------------------------------------------+
   // | Copyright (c) 2006 Zack Bartel                                         |
   // +------------------------------------------------------------------------+
@@ -21,24 +21,36 @@
   // | Foundation, Inc., 59 Temple Place - Suite 330,                         |
   // | Boston, MA  02111-1307, USA.                                           |
   // +------------------------------------------------------------------------+
-  // | Author: Zack Bartel <zack@bartel.com>                                  |
-  // | Author: Peeter Vois http://people.proekspert.ee/peeter/blog            |
   // | Author: Xan Manning http://knoxious.co.uk/                             |
   // +------------------------------------------------------------------------+ 
 
-function create_directory($fullpath) {
-	if(($fullpath[0] != '/') && ($fullpath[1] == 0)) {
-		echo "Wrong path name " . $fullpath . "\n";
-		die();
-	}
-	if( !is_dir($fullpath) ){
-		if(!mkdir($fullpath) ){
-			echo "Error by making directory " . $fullpath . "\n";
-			die();
-		}
-		chmod($fullpath, 0777 );
-		return true;
-	}
-	return false;
-}
+include_once($CONFIG['geshi_directory']);
+
+function geshi_init()
+    {
+        global $geshi;
+        global $CONFIG;
+        $geshi = new GeSHi('<!-- Unavailable -->', 'html4strict');
+		$geshi->enable_classes();
+		$geshi->set_header_type(GESHI_HEADER_PRE_VALID);
+		$geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS, 2);
+        $geshi->set_line_style($CONFIG['geshi_linea_style'], $CONFIG['geshi_lineb_style'], TRUE);
+    }
+
+function geshi_highlight($code, $language)
+    {
+        global $geshi;
+        $geshi->set_language($language);
+		$geshi->set_source($code);
+		$geshiCode = $geshi->parse_code();
+        return $geshiCode;
+    }
+
+function geshi_style()
+    {
+        global $geshi;
+		$geshiStyle = "<style type=\"text/css\">" . $geshi->get_stylesheet() . "</style>";
+        return $geshiStyle;
+    }
+
 ?>

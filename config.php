@@ -49,9 +49,18 @@
 
 /* The suffix, that can be used for complementing the repo directory,
  * useful when you are using nonbare repositories, then:
- * $repo_suffix = "/.git/";
+ * $CONFIG['repo_suffix'] = "/.git/";
+ * Bare repositories should be set to NULL;
  */
-	$CONFIG['repo_suffix'] = "/.git/";
+    $CONFIG['repo_suffix'] = "/.git/";
+    # $CONFIG['repo_suffix'] = NULL;        // Bare Repository!
+
+/* The path to GeSHi (geshi.php). Can be relative. */
+	$CONFIG['geshi_directory'] = "/path/to/geshi.php";
+
+/* GeSHi line styles. (Produces tiger striping) */
+    $CONFIG['geshi_linea_style'] = 'background: #FFFFFF;';
+    $CONFIG['geshi_lineb_style'] = 'background: #F5F5F5; font-weight: normal;';
 
 /* The date format to show the dates of commits */
 	$CONFIG['git_date_format'] = "d.m.Y (H:i)";
@@ -60,10 +69,25 @@
 	$CONFIG['secret_name'] = ".temp/secrets/";
 	$CONFIG['bundle_name'] = ".temp/bundles/";
 	$CONFIG['cache_directory'] = dirname(__FILE__) . "/" . $CONFIG['cache_name'];
+    $CONFIG['bundle_directory'] = dirname(__FILE__) . "/" . $CONFIG['bundle_name'];
+    $CONFIG['secret_directory'] = dirname(__FILE__) . "/" . $CONFIG['secret_name'];
 
-	$CONFIG['repo_http_relpath'] = "";
-	$CONFIG['http_server_name'] = "http://localhost/";
-	$CONFIG['http_method_prefix'] = $CONFIG['http_server_name'] . $CONFIG['repo_http_relpath'];
+/* There has been a major change here, sometimes the preferred method for 
+ * cloning is via git:// or ssh:// protocol. The option to change how a repository
+ * is cloned has been added to this release.
+ *
+ * Example usage. /home/git/project.git/ can be accessed with git://[SERVER_ADDRESS]/project.git (Git Protocol)
+ * $CONFIG['git_server_method'] = "git://[SERVER_ADDRESS]/";
+ *
+ * Let's say /home/git/user_folder/project.git/ wants to be accessed with SSH. [USER]@[SERVER_ADDRESS]:user_folder/project.git
+ * and this repository is for one user only...
+ * $CONFIG['git_server_method'] = "[USER]@SERVER_ADDRESS]:";
+ * $CONFIG['repo_relpath'] = "user_folder/";
+ */
+
+	$CONFIG['repo_relpath'] = "";
+	$CONFIG['git_server_method'] = "http://localhost/";
+	$CONFIG['git_method_prefix'] = $CONFIG['git_server_method'] . $CONFIG['repo_relpath'];
 	$CONFIG['communication_link'] = "http://mypersonalwebsite.com";
 
 /* if git is not installed into standard path, we need to set the path */

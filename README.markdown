@@ -3,9 +3,11 @@
 ## Summary
 Git-PHP is a port of gitweb to PHP. It includes various functionality, such as submitting diffs, repository browsing, simple search, and diff highlighting. It is based upon Zack Bartel, Peeter Vois and Jose Diaz-Gonzalez' original work, with updates to handle the latest git installs (1.6.4.4 as September 25, 2009). It definitely still needs tender love and care to make it more MVC like, but it'll get there. Please read the commit messages for more information on changes implemented.
 
+Icons now included from http://www.famfamfam.com/lab/icons/silk/
+
 ## Requirements
 * git
-* enscript
+* GeSHi
 * gd2
 
 

@@ -41,14 +41,29 @@ function file_stat_get_count($proj, &$today, &$total, $inc, $fbasename) {
 	$rtoday = 0;
 	$rtotal = 0;
 	$now = floor(time()/24/60/60); // number of days since 1970
-	$fname = $CONFIG['cache_name'] . "/" . basename($proj) . "/" . $fbasename . "-" . basename($proj, ".git");
+
+    if(!is_dir($CONFIG['cache_directory']))
+        {
+            mkdir($fname);
+            chmod($fname, 0777);
+        }
+
+    $fname = $CONFIG['cache_directory'] . basename($proj);
+
+    if(!is_dir($fname))
+        {
+            mkdir($fname);
+            chmod($fname, 0777);
+        }
+
+	$fname = $CONFIG['cache_directory'] . basename($proj) . "/" . $fbasename . "-" . basename($proj, ".git");
 	$fd = 0;
 
 	//$fp1 = sem_get(fileinode($fname), 1);
 	//sem_acquire($fp1);
 
 	if (file_exists($fname)) {
-		$file = fopen($fname, "r"); // open the counter file
+		$file = fopen($fname, "r+"); // open the counter file
 	} else {
 		$file = FALSE;
 	}
@@ -69,7 +84,7 @@ function file_stat_get_count($proj, &$today, &$total, $inc, $fbasename) {
 	// uncomment the next lines to erase the counters
 	//$rtoday = 0;
 	//$rtotal = 0;
-	$file = fopen($fname, "w"); // open or create the counter file
+	$file = fopen($fname, "w+"); // open or create the counter file
 	// write the counter value
 	fseek($file, 0); // rewind the file to beginning
 	fwrite($file, "$fd $rtoday $rtotal\n");
