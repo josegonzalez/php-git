@@ -15,8 +15,8 @@ div.optiontable .descol { text-align: right; width: 30%; }
 div.optiontable .valcol { text-align: left; width: 70%;  }
 div.optiontable img { vertical-align: middle; }
 div.imgtable table { padding: 10px 17px 10px 10px; border: 1px solid #E4E4E4; font-size: 1px; table-layout: auto; margin-top: 25px; }
-div.imgtable tags { color: #009900; background-color: #FFFF00; }
-div.imgtable branches { color: #CC6600; background-color: #99FF99; }
+div.imgtable tags { color: #009900; background-color: #FFFF00; padding: 3px 0px; }
+div.imgtable branches { color: #CC6600; background-color: #99FF99; padding: 3px 0px; }
 div.imgtable img { border: 0px; display: block; }
 div.imgtable .inl img { border: 0px; display: inline; }
 div.imgtable .inl td { height: auto; vertical-align: middle; font-size: 2px; line-height: 3px;  }
@@ -27,6 +27,7 @@ div#git-description > table { margin-top: 15px; }
 div.gitbrowse > table td { padding: 5px 5px 5px 25px; }
 img#image_blob { max-width: 600px; height: auto; }
 img#image_blob { max-height: 600px; width: auto; }
+span.strong { font-weight: bold; }
 tr:hover { background-color: #FFFFE1; }
 div.gitbrowse a.blob { text-decoration: none; }
 div.gitcode { padding: 10px; }

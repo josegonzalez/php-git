@@ -223,9 +223,55 @@ $extGeSHi = array(
 /* The following are images and need to be displayed as such! */
 '.png'          => 'image',             # PNG Image
 '.jpg'          => 'image',             # JPEG Image
-'.jpeg'          => 'image',            # JPEG Image
+'.jpeg'         => 'image',             # JPEG Image
 '.gif'          => 'image',             # GIF Image
-'.bmp'          => 'image'              # Bitmap Image
+'.bmp'          => 'image',             # Bitmap Image
+
+/* The following are needing to be downloaded! */
+'.pdf'          => 'download',
+'.doc'          => 'download',
+'.xls'          => 'download',
+'.ppt'          => 'download',
+'.pps'          => 'download', 
+'.odt'          => 'download',
+'.ods'          => 'download', 
+'.odp'          => 'download',
+'.odg'          => 'download',
+'.odp'          => 'download', 
+'.zip'          => 'download', 
+'.7z'           => 'download', 
+'.tar.gz'       => 'download',
+'.tar'          => 'download', 
+'.gz'           => 'download', 
+'.rar'          => 'download', 
+'.iso'          => 'download', 
+'.exe'          => 'download', 
+'.msi'          => 'download', 
+'.dwg'          => 'download', 
+'.dmg'          => 'download', 
+'.skp'          => 'download', 
+'.psd'          => 'download', 
+'.psb'          => 'download', 
+'.pdd'          => 'download', 
+'.psp'          => 'download', 
+'.xcf'          => 'download', 
+'.bz2'          => 'download', 
+'.bzip'         => 'download', 
+'.xpi'          => 'download',
+'.ace'          => 'download', 
+'.flac'         => 'download', 
+'.flv'          => 'download', 
+'.mkv'          => 'download', 
+'.m4a'          => 'download',
+'.mp3'          => 'download', 
+'.wma'          => 'download', 
+'.wmv'          => 'download', 
+'.ogg'          => 'download', 
+'.oda'          => 'download',
+'.odv'          => 'download',  
+'.bin'          => 'download', 
+'.mp4'          => 'download', 
+'.swf'          => 'download'
 );
 
 if (!isset($git_embed) && $git_embed != true) {
@@ -339,18 +385,31 @@ function html_blob($proj, $blob) {
 		exec($cmd, &$out);
 		$out = "<pre>" . htmlspecialchars(implode("\n", $out)) . "</pre>";
 		echo $out;
-	} elseif($ext == "image") {
+	} elseif($ext == "download") {
+        //echo "download";
+        echo "<div id=\"download_blob\"><span class=\"strong\">" . $name . "</span> | " . $blob . " | <a href=\"" . sanitized_url() . "dl=dlfile&p=" . $proj . "&h=" . $blob . "&n=" . $name . "\">download</a></div>";
+    } elseif($ext == "image") {
         //echo "image";
         echo "<a href=\"" . sanitized_url() . "dl=image&p=" . $proj . "&b=" . $blob . "&n=" . $name . "\"><img src=\"" . sanitized_url() . "dl=image&p=" . $proj . "&b=" . $blob . "&n=" . $name . "\" id=\"image_blob\" /></a>";
     } else {
 		//echo "highlight";
-		$result = 0;
-		$cmd = "GIT_DIR=" . escapeshellarg($repopath . $CONFIG['repo_suffix']) . " git cat-file blob " . escapeshellarg($blob) .
-			" 2>&1";
-		exec($cmd, &$out);
-		$out = implode("\n", $out);
-        $out = geshi_highlight($out, $ext);
-        $out = geshi_style() . $out;
+        $geshiCache = $CONFIG['cache_directory'] . $proj . "/blob-" . $blob;
+		if(!file_exists($geshiCache)) {
+		    $cmd = "GIT_DIR=" . escapeshellarg($repopath . $CONFIG['repo_suffix']) . " git cat-file blob " . escapeshellarg($blob) .
+			    " 2>&1";
+		    exec($cmd, &$out);
+		    $out = implode("\n", $out);
+            $out = geshi_highlight($out, $ext);
+            $out = geshi_style() . $out;
+            $fp = fopen($geshiCache, "w");
+            fwrite($fp, $out);
+            fclose($fp);
+            chmod($geshiCache, 0666);
+        } else {
+            $fp = fopen($geshiCache, "r");
+            $out = fread($fp, filesize($geshiCache) + 1024);
+            fclose($fp);
+        }
 		echo $out;
 	}
 	echo "</div>\n";

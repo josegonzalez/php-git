@@ -36,6 +36,10 @@ Icons now included from http://www.famfamfam.com/lab/icons/silk/
 			...
 
 ### Notes
+#### Maintenance:
+Should you require a cleanup of the cache, delete everything in the .temp/cache folder.
+    *  ``cd .temp/cache ; rm -r *``
+
 #### Code/Variables:
 (just for understanding code; doing cleanup)
 
