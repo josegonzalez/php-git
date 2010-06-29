@@ -46,7 +46,6 @@
 
 /* The directory where repo directories reside (Trailing slash) */
 	$CONFIG['repo_directory'] = "/var/user/";
-    $CONFIG['repo_directory'] = "/home/xan/git/";
 
 /* The suffix, that can be used for complementing the repo directory,
  * useful when you are using nonbare repositories, then:
@@ -58,7 +57,6 @@
 
 /* The path to GeSHi (geshi.php). Can be relative. */
 	$CONFIG['geshi_directory'] = "/path/to/geshi.php";
-    $CONFIG['geshi_directory'] = "/home/xan/www/PasteBin/geshi/geshi.php";
 
 /* GeSHi line styles. (Produces tiger striping) */
     $CONFIG['geshi_linea_style'] = 'background: #FFFFFF;';
