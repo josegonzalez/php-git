@@ -421,11 +421,23 @@ function html_diff($proj, $commit) {
 	//$c = git_commit($proj, $commit);
 	$c['parent'] = $_GET['hb'];
 	$out = array();
-	exec("GIT_DIR=" . escapeshellarg($repopath . $CONFIG['repo_suffix']) . " git diff " . escapeshellarg($c['parent']) . " " .
-	     escapeshellarg($commit) . " 2>&1", &$out);
-    $out = implode("\n", $out);
-    $out = geshi_highlight($out, 'diff');
-    $out = geshi_style() . $out;
+    $geshiCache = $CONFIG['cache_directory'] . $proj . "/diff-" . $commit;
+		if(!file_exists($geshiCache)) {
+		    exec("GIT_DIR=" . escapeshellarg($repopath . $CONFIG['repo_suffix']) . " git diff " . escapeshellarg($c['parent']) . " " .
+	        escapeshellarg($commit) . " 2>&1", &$out);
+		    $out = implode("\n", $out);
+            $out = geshi_highlight($out, 'diff');
+            $out = geshi_style() . $out;
+            $fp = fopen($geshiCache, "w");
+            fwrite($fp, $out);
+            fclose($fp);
+            chmod($geshiCache, 0666);
+        } else {
+            $fp = fopen($geshiCache, "r");
+            $out = fread($fp, filesize($geshiCache) + 1024);
+            fclose($fp);
+        }
+
 	echo "<div class=\"gitcode\">\n";
 	echo $out;
 	echo "</div>\n";
