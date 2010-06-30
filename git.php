@@ -406,6 +406,7 @@ function html_blob($proj, $blob) {
             fclose($fp);
             chmod($geshiCache, 0666);
         } else {
+            //echo "cached!";
             $fp = fopen($geshiCache, "r");
             $out = fread($fp, filesize($geshiCache) + 1024);
             fclose($fp);
@@ -433,6 +434,7 @@ function html_diff($proj, $commit) {
             fclose($fp);
             chmod($geshiCache, 0666);
         } else {
+            //echo "cached!";
             $fp = fopen($geshiCache, "r");
             $out = fread($fp, filesize($geshiCache) + 1024);
             fclose($fp);
@@ -462,7 +464,8 @@ function html_tree($proj, $tree) {
 			$plain = html_ahref(array('p' => $proj, 'dl' => "plain", 'h' => $obj['hash'], 'n' => $obj['file'])) . "plain</a>";
 			$dlfile = " | " . html_ahref(array('p' => $proj, 'dl' => "dlfile", 'h' => $obj['hash'], 'n' => $obj['file'])) . "file</a>";
 			$objlink = html_ahref(array('p' => $proj, 'a' => "jump_to_tag", 'b' => $obj['hash'], 'n' => $obj['file']), "blob") . $obj['file'] . "</a>\n";
-			$ext = @$extGeSHi[strrchr($obj['file'], ".")];
+            $file_c = strtolower($obj['file']);
+			$ext = @$extGeSHi[strrchr($file_c, ".")];
 			if ($ext == "") {
 				$icon = "<img src=\"" . sanitized_url() . "dl=icon_plain\" style=\"border-width: 0px;\"/>";
             } elseif ($ext == "image") {
