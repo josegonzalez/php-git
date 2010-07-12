@@ -166,6 +166,7 @@ $extGeSHi = array(
 '.lhs'		    => 'haskell',			#Haskell 
 '.html'		    => 'html4strict',		#HTML
 '.htm'		    => 'html4strict',		#HTML 
+'.xht'		    => 'html4strict',		#HTML 
 '.xhtml'	    => 'html4strict',		#HTML 
 '.shtml'	    => 'html4strict',		#HTML 
 '.ini'		    => 'ini',		    	#INI 
@@ -219,6 +220,10 @@ $extGeSHi = array(
 '.vim'		    => 'vim',			    #Vim Script 
 '.bat'		    => 'winbatch',			#Winbatch  
 '.cmd'		    => 'winbatch',			#Winbatch 
+'.xml'          => 'xml',               #XML
+'.atom'          => 'xml',              #XML
+'.rss'          => 'xml',               #XML
+'.ghx'          => 'xml',               #XML
 
 /* The following are images and need to be displayed as such! */
 '.png'          => 'image',             # PNG Image
@@ -229,6 +234,7 @@ $extGeSHi = array(
 
 /* The following are needing to be downloaded! */
 '.pdf'          => 'download',
+'.ai'           => 'download',
 '.doc'          => 'download',
 '.xls'          => 'download',
 '.ppt'          => 'download',
@@ -271,7 +277,16 @@ $extGeSHi = array(
 '.odv'          => 'download',  
 '.bin'          => 'download', 
 '.mp4'          => 'download', 
-'.swf'          => 'download'
+'.swf'          => 'download',
+'.ico'          => 'download',
+'.o'            => 'download',
+'.tif'          => 'download',
+'.tiff'         => 'download',
+'.3dm'          => 'download',
+'.3ds'          => 'download',
+'.so'           => 'download',
+'.dll'          => 'download',
+'.dylib'        => 'download'
 );
 
 if (!isset($git_embed) && $git_embed != true) {
