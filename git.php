@@ -286,7 +286,8 @@ $extGeSHi = array(
 '.3ds'          => 'download',
 '.so'           => 'download',
 '.dll'          => 'download',
-'.dylib'        => 'download'
+'.dylib'        => 'download',
+'.icns'         => 'download'
 );
 
 if (!isset($git_embed) && $git_embed != true) {
