@@ -399,7 +399,7 @@ function html_blob($proj, $blob) {
 		//echo "nonhighlight!";
 		$cmd = "GIT_DIR=" . escapeshellarg($repopath . $CONFIG['repo_suffix']) . " git cat-file blob " . escapeshellarg($blob) . " 2>&1";
 		exec($cmd, &$out);
-		$out = "<pre>" . implode("\n", $out) . "</pre>";
+		$out = "<pre>" . htmlspecialchars(implode("\n", $out)) . "</pre>";
 		echo $out;
 	} elseif($ext == "download") {
         //echo "download";
@@ -552,7 +552,7 @@ function html_shortlog($proj, $lines) {
 		$date = date($CONFIG['git_date_format'], (int)$c['date']);
 		$cid = $order[$i];
 		$pid = $c['parent'];
-		$mess = short_desc(htmlspecialchars($c['message']), 40);
+		$mess = short_desc($c['message'], 40);
 		$auth = short_desc($c['author'], 25);
 		$tid = $c['tree'];
 		// different ways of displaying diff
