@@ -14,7 +14,7 @@ Icons now included from http://www.famfamfam.com/lab/icons/silk/
 ## Installation
 1.  edit config.php
 2.  In a terminal window, change directories to your git-php install directory and execute the following:
-    *  ``mkdir .temp/cache .temp/bundles .temp/secrets ; cd .temp ; chmod -R 0777 cache bundles secrets``
+    *  ``mkdir .temp ; mkdir .temp/cache .temp/bundles .temp/secrets ; cd .temp ; chmod -R 0777 cache bundles secrets``
 
 ### Supposed directory structure:
 	git-php-\
@@ -36,6 +36,10 @@ Icons now included from http://www.famfamfam.com/lab/icons/silk/
 			...
 
 ### Notes
+#### Maintenance:
+Should you require a cleanup of the cache, delete everything in the .temp/cache folder.
+    *  ``cd .temp/cache ; rm -r *``
+
 #### Code/Variables:
 (just for understanding code; doing cleanup)
 

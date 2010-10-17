@@ -166,6 +166,7 @@ $extGeSHi = array(
 '.lhs'		    => 'haskell',			#Haskell 
 '.html'		    => 'html4strict',		#HTML
 '.htm'		    => 'html4strict',		#HTML 
+'.xht'		    => 'html4strict',		#HTML 
 '.xhtml'	    => 'html4strict',		#HTML 
 '.shtml'	    => 'html4strict',		#HTML 
 '.ini'		    => 'ini',		    	#INI 
@@ -219,13 +220,74 @@ $extGeSHi = array(
 '.vim'		    => 'vim',			    #Vim Script 
 '.bat'		    => 'winbatch',			#Winbatch  
 '.cmd'		    => 'winbatch',			#Winbatch 
+'.xml'          => 'xml',               #XML
+'.atom'          => 'xml',              #XML
+'.rss'          => 'xml',               #XML
+'.ghx'          => 'xml',               #XML
 
 /* The following are images and need to be displayed as such! */
 '.png'          => 'image',             # PNG Image
 '.jpg'          => 'image',             # JPEG Image
-'.jpeg'          => 'image',            # JPEG Image
+'.jpeg'         => 'image',             # JPEG Image
 '.gif'          => 'image',             # GIF Image
-'.bmp'          => 'image'              # Bitmap Image
+'.bmp'          => 'image',             # Bitmap Image
+
+/* The following are needing to be downloaded! */
+'.pdf'          => 'download',
+'.ai'           => 'download',
+'.doc'          => 'download',
+'.xls'          => 'download',
+'.ppt'          => 'download',
+'.pps'          => 'download', 
+'.odt'          => 'download',
+'.ods'          => 'download', 
+'.odp'          => 'download',
+'.odg'          => 'download',
+'.odp'          => 'download', 
+'.zip'          => 'download', 
+'.7z'           => 'download', 
+'.tar.gz'       => 'download',
+'.tar'          => 'download', 
+'.gz'           => 'download', 
+'.rar'          => 'download', 
+'.iso'          => 'download', 
+'.exe'          => 'download', 
+'.msi'          => 'download', 
+'.dwg'          => 'download', 
+'.dmg'          => 'download', 
+'.skp'          => 'download', 
+'.psd'          => 'download', 
+'.psb'          => 'download', 
+'.pdd'          => 'download', 
+'.psp'          => 'download', 
+'.xcf'          => 'download', 
+'.bz2'          => 'download', 
+'.bzip'         => 'download', 
+'.xpi'          => 'download',
+'.ace'          => 'download', 
+'.flac'         => 'download', 
+'.flv'          => 'download', 
+'.mkv'          => 'download', 
+'.m4a'          => 'download',
+'.mp3'          => 'download', 
+'.wma'          => 'download', 
+'.wmv'          => 'download', 
+'.ogg'          => 'download', 
+'.oda'          => 'download',
+'.odv'          => 'download',  
+'.bin'          => 'download', 
+'.mp4'          => 'download', 
+'.swf'          => 'download',
+'.ico'          => 'download',
+'.o'            => 'download',
+'.tif'          => 'download',
+'.tiff'         => 'download',
+'.3dm'          => 'download',
+'.3ds'          => 'download',
+'.so'           => 'download',
+'.dll'          => 'download',
+'.dylib'        => 'download',
+'.icns'         => 'download'
 );
 
 if (!isset($git_embed) && $git_embed != true) {
@@ -339,18 +401,32 @@ function html_blob($proj, $blob) {
 		exec($cmd, &$out);
 		$out = "<pre>" . htmlspecialchars(implode("\n", $out)) . "</pre>";
 		echo $out;
-	} elseif($ext == "image") {
+	} elseif($ext == "download") {
+        //echo "download";
+        echo "<div id=\"download_blob\"><span class=\"strong\">" . $name . "</span> | " . $blob . " | <a href=\"" . sanitized_url() . "dl=dlfile&p=" . $proj . "&h=" . $blob . "&n=" . $name . "\">download</a></div>";
+    } elseif($ext == "image") {
         //echo "image";
-        echo "<img src=\"" . sanitized_url() . "dl=image&p=" . $proj . "&b=" . $blob . "&n=" . $name . "\" />";
+        echo "<a href=\"" . sanitized_url() . "dl=image&p=" . $proj . "&b=" . $blob . "&n=" . $name . "\"><img src=\"" . sanitized_url() . "dl=image&p=" . $proj . "&b=" . $blob . "&n=" . $name . "\" id=\"image_blob\" /></a>";
     } else {
 		//echo "highlight";
-		$result = 0;
-		$cmd = "GIT_DIR=" . escapeshellarg($repopath . $CONFIG['repo_suffix']) . " git cat-file blob " . escapeshellarg($blob) .
-			" 2>&1";
-		exec($cmd, &$out);
-		$out = implode("\n", $out);
-        $out = geshi_highlight($out, $ext);
-        $out = geshi_style() . $out;
+        $geshiCache = $CONFIG['cache_directory'] . $proj . "/blob-" . $blob;
+		if(!file_exists($geshiCache)) {
+		    $cmd = "GIT_DIR=" . escapeshellarg($repopath . $CONFIG['repo_suffix']) . " git cat-file blob " . escapeshellarg($blob) .
+			    " 2>&1";
+		    exec($cmd, &$out);
+		    $out = implode("\n", $out);
+            $out = geshi_highlight($out, $ext);
+            $out = geshi_style() . $out;
+            $fp = fopen($geshiCache, "w");
+            fwrite($fp, $out);
+            fclose($fp);
+            chmod($geshiCache, 0666);
+        } else {
+            //echo "cached!";
+            $fp = fopen($geshiCache, "r");
+            $out = fread($fp, filesize($geshiCache) + 1024);
+            fclose($fp);
+        }
 		echo $out;
 	}
 	echo "</div>\n";
@@ -362,11 +438,24 @@ function html_diff($proj, $commit) {
 	//$c = git_commit($proj, $commit);
 	$c['parent'] = $_GET['hb'];
 	$out = array();
-	exec("GIT_DIR=" . escapeshellarg($repopath . $CONFIG['repo_suffix']) . " git diff " . escapeshellarg($c['parent']) . " " .
-	     escapeshellarg($commit) . " 2>&1", &$out);
-    $out = implode("\n", $out);
-    $out = geshi_highlight($out, 'diff');
-    $out = geshi_style() . $out;
+    $geshiCache = $CONFIG['cache_directory'] . $proj . "/diff-" . $commit;
+		if(!file_exists($geshiCache)) {
+		    exec("GIT_DIR=" . escapeshellarg($repopath . $CONFIG['repo_suffix']) . " git diff " . escapeshellarg($c['parent']) . " " .
+	        escapeshellarg($commit) . " 2>&1", &$out);
+		    $out = implode("\n", $out);
+            $out = geshi_highlight($out, 'diff');
+            $out = geshi_style() . $out;
+            $fp = fopen($geshiCache, "w");
+            fwrite($fp, $out);
+            fclose($fp);
+            chmod($geshiCache, 0666);
+        } else {
+            //echo "cached!";
+            $fp = fopen($geshiCache, "r");
+            $out = fread($fp, filesize($geshiCache) + 1024);
+            fclose($fp);
+        }
+
 	echo "<div class=\"gitcode\">\n";
 	echo $out;
 	echo "</div>\n";
@@ -391,7 +480,8 @@ function html_tree($proj, $tree) {
 			$plain = html_ahref(array('p' => $proj, 'dl' => "plain", 'h' => $obj['hash'], 'n' => $obj['file'])) . "plain</a>";
 			$dlfile = " | " . html_ahref(array('p' => $proj, 'dl' => "dlfile", 'h' => $obj['hash'], 'n' => $obj['file'])) . "file</a>";
 			$objlink = html_ahref(array('p' => $proj, 'a' => "jump_to_tag", 'b' => $obj['hash'], 'n' => $obj['file']), "blob") . $obj['file'] . "</a>\n";
-			$ext = @$extGeSHi[strrchr($obj['file'], ".")];
+            $file_c = strtolower($obj['file']);
+			$ext = @$extGeSHi[strrchr($file_c, ".")];
 			if ($ext == "") {
 				$icon = "<img src=\"" . sanitized_url() . "dl=icon_plain\" style=\"border-width: 0px;\"/>";
             } elseif ($ext == "image") {
@@ -702,7 +792,7 @@ function git_commit($proj, $cid) {
 				$commit["date"] = $d[0];
 				break;
 			case "message":
-				$commit["message"] = implode(" ", $d);
+				$commit["message"] = htmlspecialchars(implode(" ", $d));
 				break;
 			case "endrecord":
 				break;
