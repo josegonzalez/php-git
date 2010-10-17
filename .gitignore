@@ -1,0 +1,4 @@
+tmp/cache/*
+!tmp/cache/empty
+tmp/logs/*
+!tmp/logs/empty

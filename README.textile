@@ -1,0 +1,19 @@
+h1. GIT-PHP
+
+For those times when loading a local "github" instance in php would be nice.
+
+h2. Background
+
+I love maintaining old webapps and making them "better" - that's a relative term ;) . One of my interests is project management systems, and I wanted to integrate a code source viewer like on github etc., so I looked for alternate implementations of the git protocol.
+
+I found a few classes, but eventually started maintaining a git-php implementation by Zack Bartel. I integrated lots of random patches and fixed up the code so it would work on my machine, and left it at that about a year ago.
+
+"Xan Manning":http://github.com/xanmanning decided to add lots of "features" to it, but I was never really happy with the original codebase to begin with. I don't know how GNU developers make webapps that function to be honest.
+
+I ended up rewriting git-php into an MVC-like structure. It's still very incomplete and doesn't function at all like the old one, but some day it will be useful.
+
+h2. Installation
+
+Drop it in a directory, point a virtualhost at the @web@ folder, and off you go. This is assuming you have Apache as a server.
+
+You may need to tweak the settings a bit, they are in @config/core.php@. I will document these when I have completed the app, as the configuration interface may change drastically between now and then. Hopefully it is self-explanatory though.

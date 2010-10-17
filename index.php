@@ -1,5 +1,2 @@
 <?php
-
-header('Location: git.php');
-
-?>
+require 'web' . DIRECTORY_SEPARATOR . 'index.php';

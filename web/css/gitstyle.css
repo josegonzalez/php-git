@@ -1,0 +1,80 @@
+/* Reset
+------------------------------------------------------------------------- */
+/* Based on http://meyerweb.com/eric/tools/css/reset/ */
+/* v1.0 | 20080212 */
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,
+blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,
+font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,
+u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,
+caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent;}
+ol,ul{list-style:none;}
+blockquote,q{quotes:none;}
+blockquote:before,blockquote:after,
+q:before,q:after{content:'';content:none;}
+:focus{outline:0;}
+ins{text-decoration:none;}
+del{text-decoration:line-through;}
+table{border-collapse:collapse;border-spacing:0;}
+a{outline:none;color: rgb(65, 131, 196);text-decoration: none;}
+a:hover{text-decoration: underline;}
+img.center{display:block;margin: auto;padding:.2em;background-color: #fff;border:1px solid rgb(216, 216, 216); text-align:left;}
+
+body{font-family:"Monaco","Courier New",monospace;font-size:12px;margin:0;background-color:#fff;color:#000000;}
+.githead{background-color:#cfcfcf;height:3.4em;line-height:3.4em;position:relative;padding:0 27px;margin-bottom:30px;}
+.githead a:link,.githead a:visited{color:#000;background:#eee;text-decoration:none;padding:3px;}
+.githead a:hover{background:#bbb;padding:3px;}
+.githead a:first-child{background:transparent;}
+.githead img.logo{float:right;padding:0.7em 1.0em;border:0;}
+.gitfooter{height:115px;line-height:115px;background-color:#4386ba;padding:0 30px;margin-top:15px;text-align:right;}
+.gitfooter a{padding-top:5em;}
+.gitfooter_text{color:#fff;display:inline;float:left;}
+
+.gittitle{margin: 0em 2em 0em 2em;padding:1em 1em 1em 1em;background-color: rgb(240, 240, 240);border:1px solid rgb(216, 216, 216); text-align:left;}
+#git-description, #git-submit{margin: 1em 2em 1em 2em;padding:1em 1em 1em 1em;background-color: rgb(234, 242, 245);border: 1px solid rgb(190, 220, 231);}
+#git-description table tbody tr td, #git-description table, #git-description table tbody, #git-description table tbody tr{background-color: rgb(234, 242, 245);border:none;}
+#git-submit table tbody tr td, #git-submit table, #git-submit table tbody, #git-submit table tbody tr{background-color: rgb(234, 242, 245);border:none;}
+#git-help{margin: 1em 2em 1em 2em;padding:1em 1em 1em 1em;background-color: rgb(248, 248, 248);border: 1px solid rgb(190, 220, 231);}
+#git-help table tbody tr td, #git-help table, #git-help table tbody, #git-help table tbody tr{border:none;}
+.git-home{margin: 1em 2em 1em 2em;}
+
+#git-submit table tbody tr:hover{border-width:1px;}
+#git-submit table tbody tr td.descol{text-align:right;width:30%;}
+#git-submit table tbody tr td.valcol{text-align:left;width:70%}
+
+.gitbrowse{margin: 1em 2em 1em 2em;}
+div.gitbrowse a.blob{text-decoration:none;color:#000000;}
+.gitcode{border: 1px solid rgb(216, 216, 216);margin: 1em 2em 1em 2em;padding:10px;}
+div.gitspacer{padding:1px 0px 0px 0px;background-color:#FFFFFF;}
+a.rss_logo{float:right;padding:3px;width:35px;line-height:10px;border:1px solid;border-color:#fcc7a5 #7d3302 #3e1a01 #ff954e;color:#ffffff;background-color:#ff6600;font-weight:bold;font-family:sans-serif;font-size:70%;text-align:center;text-decoration:none;margin-top:49px;margin-left:5px;}
+a.rss_logo:hover{background-color:#ee5500;}
+div.gitbrowse a.blob:hover{text-decoration:underline;}
+a.gitbrowse:hover{text-decoration:underline;color:#880000;}
+a.rss_logo{float:left;padding:3px 0px;width:35px;line-height:10px;margin:2px 5px 5px 5px;border:1px solid;border-color:#fcc7a5 #7d3302 #3e1a01 #ff954e;color:#ffffff;background-color:#ff6600;font-weight:bold;font-family:sans-serif;font-size:10px;text-align:center;text-decoration:none;}
+a.rss_logo:hover{background-color:#ee5500;}
+
+/* Tables */
+.table-wrapper{ margin: 1em 2em 1em 2em; }
+
+.commitlog { border:1px solid #ccc;border-right:0;/*clear:both;*/color:#333;width:100%; }
+.commitlog th{ background-color: rgb(234, 234, 234);font-weight: normal;padding: 0.5em 0.3em;border: 1px solid rgb(216, 216, 216);color: rgb(153, 153, 153); }
+.commitlog th a{ background-color:#f2f2f2;display:block;padding:2px 4px;text-decoration:none; }
+.commitlog th a:hover{ background-color:#ccc;color:#333;text-decoration:none; }
+.commitlog td{ background-color: rgb(234, 242, 245);border: 1px solid rgb(190, 220, 231);padding: 0.5em 0.3em;color: rgb(72, 72, 72);vertical-align:top; }
+.commitlog td.actions{ white-space:nowrap; }
+.commitlog td.actions a{ margin:0px 6px; }
+.commitlog td.actions span{ display: inline-block; width: 60px; }
+
+.git-description { margin: 1em 2em;padding: 1em; }
+.git-description td { padding: 5px 5px 5px 12px; }
+
+.listing {border:1px solid #ccc;border-right:0;/*clear:both;*/color:#333;width:100%;}
+.listing th{background-color: rgb(234, 234, 234);font-weight: normal;padding: 0.5em 0.3em;border: 1px solid rgb(216, 216, 216);color: rgb(153, 153, 153);}
+.listing th a{background-color:#f2f2f2;display:block;padding:2px 4px;text-decoration:none;}
+.listing th a:hover{background-color:#ccc;color:#333;text-decoration:none;}
+.listing tr td{background-color: rgb(248, 248, 248);padding: 0.5em 0.3em;border: 1px solid rgb(225, 225, 225);color: rgb(72, 72, 72);vertical-align:top;}
+.listing tr.altrow td{background:#f4f4f4;}
+.listing td.actions{text-align:center;white-space:nowrap;}
+.listing td.actions a{margin:0px 6px;}
+
+/* Diffs */
+.diffsummary{border: 1px solid rgb(216, 216, 216);margin: 1em 2em 1em 2em;padding:10px;}
