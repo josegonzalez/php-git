@@ -137,7 +137,7 @@ class Git {
 
     public static function diff($config, $proj, $commit) {
         $out = array();
-        $cmd = "GIT_DIR=" . self::$repos[$proj] . $config['repo_suffix'] . " {$config['git_binary']} diff {$commit} 2>&1";
+        $cmd = "GIT_DIR=" . self::$repos[$proj] . $config['repo_suffix'] . " {$config['git_binary']} show {$commit} --format=\"%b\" 2>&1";
         exec($cmd, &$out);
         //$out = htmlentities(implode("\n", $out));
         //$out = explode('\n', $out);
@@ -147,6 +147,7 @@ class Git {
         $file = array();
         $results = array();
         foreach ($out as $line) {
+            if (empty($line)) continue;
             if ($diff) {
                 if (substr($line, 0, 4) === 'diff') {
                     $results[] = array(
