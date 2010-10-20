@@ -88,6 +88,11 @@ class Project {
         return Git::diff($this->_config, $proj, $commit);
     }
 
+    function getTree($proj, $filepath = 'HEAD') {
+        if ($filepath != 'HEAD') $filepath = "HEAD:{$filepath}";
+        return Git::lsTree($this->_config, $proj, $filepath);
+    }
+
     function getCommit($proj, $commit) {
         $commit = Git::commit($this->_config, $proj, $commit);
         if (is_array($commit) && count($commit) == 1) return current($commit);
