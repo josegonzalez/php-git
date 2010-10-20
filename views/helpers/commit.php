@@ -33,14 +33,4 @@ class CommitHelper {
         );
     }
 
-    function diff($hash, $request, $compare = null) {
-        if (!$compare) $compare = $request->params['branch'];
-        return sprintf("<span>Diff</span><a href=\"/%s/diff/%s/%s\">to %s</a>",
-            $request->params['project'],
-            $compare,
-            $hash,
-            $compare
-        );
-    }
-
 }

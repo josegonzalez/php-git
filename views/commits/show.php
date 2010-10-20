@@ -15,7 +15,6 @@
                 <?php echo $this->Commit->tree($commit['tree'], $this->_request); ?><br />
                 <?php echo $this->Commit->parents($commit['parents'], $this->_request); ?>
                 <?php echo $this->Commit->download($commit['hash'], $this->_request); ?><br />
-                <?php echo $this->Commit->diff($commit['hash'], $this->_request, 'master'); ?><br />
             </td>
         </tr>
     </table>
