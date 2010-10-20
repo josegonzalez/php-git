@@ -135,13 +135,28 @@ class Git {
         return self::getLastNCommits($config, $proj, $options);
     }
 
+    public static function lsTree($config, $proj, $tree) {
+        $out = array();
+        //Have to strip the \t between hash and file
+        $cmd = "GIT_DIR=" . self::$repos[$proj] . $config['repo_suffix'] . " {$config['git_binary']} ls-tree " . $tree . " 2>&1 | sed -e 's/\t/ /g'";
+
+        exec($cmd, &$out);
+
+        $results = array();
+        foreach ($out as $line) {
+            $results[] = array_combine(
+                array('perm', 'type', 'hash', 'file'),
+                explode(" ", $line, 4)
+            );
+        }
+        return $results;
+    }
+
     public static function diff($config, $proj, $commit) {
         $out = array();
         $cmd = "GIT_DIR=" . self::$repos[$proj] . $config['repo_suffix'] . " {$config['git_binary']} show {$commit} --format=\"%b\" 2>&1";
         exec($cmd, &$out);
-        //$out = htmlentities(implode("\n", $out));
-        //$out = explode('\n', $out);
-        
+
         $diff = false;
         $summary = array();
         $file = array();
