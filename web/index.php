@@ -1,5 +1,5 @@
 <?php
-include_once('..' . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'constants.php');
+include_once(dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'constants.php');
 include_once(CORE . 'basics.php');
 include_once(CORE . 'router.php');
 include_once(CORE . 'inflector.php');
