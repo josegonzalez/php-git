@@ -33,4 +33,9 @@ class CommitHelper {
         );
     }
 
+    function date($datetime) {
+        $date = new DateTime($datetime);
+        return $date->format('Y-m-d H:i:s');
+    }
+
 }

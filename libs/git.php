@@ -142,18 +142,46 @@ class Git {
     public static function lsTree($proj, $tree) {
         $gitBinary = System::get('git_binary');
 
+        $lsTreePath = ($tree != '') ? "HEAD:{$tree}" : 'HEAD';
+
         $out = array();
         //Have to strip the \t between hash and file
-        $cmd = "GIT_DIR=" . self::$repos[$proj] . System::get('repo_suffix') . " {$gitBinary} ls-tree " . $tree . " 2>&1 | sed -e 's/\t/ /g'";
-
+        $cmd = sprintf("GIT_DIR=%s%s %s ls-tree %s 2>&1 | sed -e 's/\t/ /g'",
+            self::$repos[$proj],
+            System::get('repo_suffix'),
+            $gitBinary,
+            ($tree != '') ? "HEAD:{$tree}" : 'HEAD'
+        );
         exec($cmd, &$out);
 
         $results = array();
         foreach ($out as $line) {
-            $results[] = array_combine(
+            $result = array_combine(
                 array('perm', 'type', 'hash', 'file'),
                 explode(" ", $line, 4)
             );
+            if (empty($tree)) {
+                $path = $result['file'];
+            } elseif (substr($tree, -1) == DS) {
+                $path = $tree . $result['file'];
+            } else {
+                $path = $tree . DS . $result['file'];
+            }
+            $cmd = sprintf("GIT_DIR=%s%s %s log --pretty=format:%%H%%x00%%an%%x00%%ai%%x00%%s -1 -- %s",
+                self::$repos[$proj],
+                System::get('repo_suffix'),
+                $gitBinary,
+                $path
+            );
+            exec($cmd, $info);
+            if (empty($info)) {
+                $results[] = $result;
+                continue;
+            }
+
+            list($revision, $author, $date, $message) = explode(chr(0), $info[0]);
+            $results[] = array_merge($result, compact('revision', 'author', 'date', 'message'));
+            unset($info);
         }
         return $results;
     }

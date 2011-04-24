@@ -90,8 +90,7 @@ class Project {
         return Git::diff($proj, $commit);
     }
 
-    function getTree($proj, $filepath = 'HEAD') {
-        if ($filepath != 'HEAD') $filepath = "HEAD:{$filepath}";
+    function getTree($proj, $filepath = '') {
         return Git::lsTree($proj, $filepath);
     }
 

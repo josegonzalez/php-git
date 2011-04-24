@@ -2,7 +2,8 @@
     <table class="listing" cellpadding="0" cellspacing="0">
         <tr>
             <th>file</th>
-            <th>perm</th>
+            <th>date</th>
+            <th>message</th>
         </tr>
         <?php foreach ($tree as $blob) : ?>
             <tr>
@@ -15,7 +16,10 @@
                     <?php echo $this->File->link($blob, $request); ?>
                 </td>
                 <td>
-                    <?php echo $blob['perm']; ?>
+                    <?php echo $this->Commit->date($blob['date']); ?>
+                </td>
+                <td>
+                    <?php echo $blob['message']; ?> [<?php echo $blob['author']; ?>]
                 </td>
             </tr>
         <?php endforeach; ?>
