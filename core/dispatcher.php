@@ -1,10 +1,10 @@
 <?php
 class Dispatcher {
 
-    public static function dispatch($config, $request) {
+    public static function dispatch($request) {
         $controllerName = Inflector::classify("{$request->params['controller']}_controller");
 
-        $controller = new $controllerName($config, $request);
+        $controller = new $controllerName($request);
         if (!is_object($controller)) diebug($request);
 
         $action = $request->params['action'];

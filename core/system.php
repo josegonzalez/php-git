@@ -13,16 +13,19 @@ class System {
         }
     }
 
-    public static function set($config) {
+    public static function load($config) {
         self::$configuration = $config;
+    }
+
+    public static function set($key, $value) {
+        self::$configuration[$key] = $value;
     }
 
     public static function get($key) {
         if (isset(self::$configuration[$key])) {
             return self::$configuration[$key];
         }
-
-        throw new Exception("Configuration key not found");
+        return null;
     }
 
 }

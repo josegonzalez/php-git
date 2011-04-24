@@ -2,8 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
     <head>
         <title>
-            <?php if (isset($this->_config['title'])) : ?>
-                <?php echo $this->_config['title']; ?>
+            <?php $title = System::get('title'); ?>
+            <?php if ($title) : ?>
+                <?php echo $title; ?>
             <?php else : ?>
                 <?php echo $this->_request->params['controller'] . '/' . $this->_request->params['action'] ?>
             <?php endif; ?>

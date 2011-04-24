@@ -70,14 +70,6 @@ class Gears {
  */
     protected $_request;
 
-/**
- * Current Application Configuration
- *
- * @access protected
- * @var array
- */
-    protected $_config;
-
     public function __set($name, $value) {
         if (file_exists(MODELS . Inflector::underscore($name)  . '.php')) {
             require_once(MODELS . Inflector::underscore($name)  . '.php');
@@ -123,7 +115,7 @@ class Gears {
  * @param string $ext
  * @return void
  */
-    public function __construct($request, $config, $options = array()) {
+    public function __construct($request, $options = array()) {
         $options = array_merge(array(
             'ext' => 'tpl',
             'path' => '',
@@ -145,7 +137,6 @@ class Gears {
         }
 
         $this->_request = $request;
-        $this->_config  = $config;
         $this->__config = array(
             'element_path' => $options['element_path'],
             'ext' => trim($options['ext'], '.'),

@@ -3,7 +3,7 @@
 class CommitsController extends Controller {
 
     protected function beforeFilter() {
-        Git::loadRepositories($this->_config);
+        Git::loadRepositories();
     }
 
     public function index() {
@@ -12,7 +12,7 @@ class CommitsController extends Controller {
             $this->_request->params['project'] => "/{$this->_request->params['project']}",
         );
 
-        $this->_config['title'] = $this->_request->params['project'];
+        System::set('title', $this->_request->params['project']);
         $owner      = $this->Project->getOwner($this->_request->params['project']);
         $last_change= $this->Project->getLastChange($this->_request->params['project']);
         $description= $this->Project->getDescription($this->_request->params['project']);
@@ -23,7 +23,8 @@ class CommitsController extends Controller {
     }
 
     public function show() {
-        $this->_config['title'] = 'Commit' . $this->_request->params['commit'];
+        System::set('title', 'Commit' . $this->_request->params['commit']);
+
         $this->_breadcrumbs = array(
             'home' => '/',
             $this->_request->params['project'] => "/{$this->_request->params['project']}",

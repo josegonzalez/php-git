@@ -3,13 +3,12 @@
 class Controller {
 
     var $name;
-    var $_config;
     var $_request;
     var $_models = array();
     var $_view;
     var $_breadcrumbs = array('home' => '/');
 
-    public function __construct($config, $request) {
+    public function __construct($request) {
         if ($this->name === null) {
             $r = null;
             if (!preg_match('/(.*)Controller/i', get_class($this), $r)) {
@@ -19,9 +18,8 @@ class Controller {
             $this->name = $r[1];
         }
 
-        $this->_config  = $config;
         $this->_request = $request;
-        $this->_view    = new Gears($request, $config, array(
+        $this->_view    = new Gears($request, array(
             'ext'           => 'php',
             'element_path'  => VIEWS . 'elements' . DS,
             'path'          => VIEWS . Inflector::underscore($this->name) . DS,
@@ -53,7 +51,7 @@ class Controller {
         
         if (file_exists(MODELS . Inflector::underscore($name)  . '.php')) {
             require_once(MODELS . Inflector::underscore($name)  . '.php');
-            $this->_models[$name] = new $name($this->_config);
+            $this->_models[$name] = new $name();
             return $this->_models[$name];
         }
 
@@ -79,7 +77,6 @@ class Controller {
 
     public function render($template = null) {
         if (!$template) $template = $this->_request->params['action'];
-        $this->set('config', $this->_config);
         $this->set('request', $this->_request);
         $this->set('breadcrumbs', $this->_breadcrumbs);
         $this->_view->display($template);

@@ -22,5 +22,5 @@ function __autoload($name) {
 }
 
 System::verify($CONFIG);
-System::set($CONFIG);
-Dispatcher::dispatch($CONFIG, $router->request);
+System::load($CONFIG);
+Dispatcher::dispatch($router->request);

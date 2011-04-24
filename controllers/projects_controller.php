@@ -3,7 +3,7 @@
 class ProjectsController extends Controller {
 
     protected function beforeFilter() {
-        Git::loadRepositories($this->_config);
+        Git::loadRepositories();
     }
 
     public function show() {
@@ -12,7 +12,7 @@ class ProjectsController extends Controller {
             $this->_request->params['project'] => "/{$this->_request->params['project']}",
         );
 
-        $this->_config['title'] = $this->_request->params['project'];
+        System::set('title', $this->_request->params['project']);
         $tree = $this->Project->getTree(
             $this->_request->params['project'],
             $this->_request->params['filepath']

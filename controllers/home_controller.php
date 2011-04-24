@@ -3,8 +3,8 @@
 class HomeController extends Controller {
 
     public function index() {
-        $this->_config['title'] = 'Home';
-        $repos = $this->Project->findAll($this->_config);
+        System::set('title', 'Home');
+        $repos = $this->Project->findAll();
         $this->set(compact('repos'));
     }
 

@@ -1,15 +1,17 @@
 <?php
 class Html {
 
-    public static function header($config) {
+    public static function header() {
 
     }
 
-    public static function style($config)   {
+    public static function style()   {
     	if (file_exists(WEB . "css" . DS . "style.css")) {
     		echo "<link rel=\"stylesheet\" href=\"css/style.css\" type=\"text/css\" />\n";
     	}
-    	if ($config['git_css']) {
+
+    	$gitCss = System::get('git_css');
+    	if ($gitCss) {
     		echo "<link rel=\"stylesheet\" href=\"css/gitstyle.css\" type=\"text/css\" />\n";
     	}
     }

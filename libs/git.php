@@ -3,10 +3,10 @@ class Git {
 
     static $repos;
 
-    public static function loadRepositories($config) {
-        if (!isset($config['repo_directory'])) return array();
+    public static function loadRepositories() {
+        if (!System::get('repo_directory')) return array();
 
-        $repoDir = $config['repo_directory'];
+        $repoDir = System::get('repo_directory');
         if (!file_exists($repoDir)) return array();
         if (!is_dir($repoDir)) return array();
 
@@ -17,13 +17,14 @@ class Git {
             while (false !== ($file = readdir($handle))) {
                 $fullpath = $repoDir . $file;
                 if ($file[0] != '.' && is_dir($fullpath)) {
-                    if (is_dir($fullpath . $config['repo_suffix'])) {
+                    $repoSuffix = System::get('repo_suffix');
+                    if (is_dir($fullpath . $repoSuffix)) {
                         $headFile = "HEAD";
-                        if (substr($config['repo_suffix'], -1) != "/") {
+                        if (substr($repoSuffix, -1) != "/") {
                             $headFile = "/{$headFile}";
                         }
-                        if (file_exists($fullpath . $config['repo_suffix'] . $headFile)
-                        && self::getOwner($config, $fullpath) != NULL) {
+                        if (file_exists($fullpath . $repoSuffix . $headFile)
+                        && self::getOwner($fullpath, $repoSuffix) != NULL) {
                             $valid[] = trim($file);
                             $repos[] = trim("{$fullpath}/");
                         }
@@ -38,20 +39,23 @@ class Git {
         return array($repos, $valid);
     }
 
-    public static function getOwner($config, $path) {
+    public static function getOwner($path, $repoSuffix) {
         $out = array();
-        $cmd = "GIT_DIR=" . escapeshellarg($path . $config['repo_suffix']) . " {$config['git_binary']} rev-list  --header --max-count=1 HEAD 2>&1 | grep -a committer | cut -d' ' -f2-3";
+        $gitBinary = System::get('git_binary');
+        $cmd = "GIT_DIR=" . escapeshellarg($path . $repoSuffix) . " {$gitBinary} rev-list  --header --max-count=1 HEAD 2>&1 | grep -a committer | cut -d' ' -f2-3";
         $own = exec($cmd, &$out);
         return $own;
     }
 
-    function parse($config, $proj, $what) {
-        $cmd1 = "GIT_DIR=" . self::$repos[$proj] . $config['repo_suffix'] . " {$config['git_binary']} rev-parse  --symbolic --" . escapeshellarg($what) . "  2>&1";
+    function parse($proj, $what) {
+        $gitBinary = System::get('git_binary');
+
+        $cmd1 = "GIT_DIR=" . self::$repos[$proj] . System::get('repo_suffix') . " {$gitBinary} rev-parse  --symbolic --" . escapeshellarg($what) . "  2>&1";
         $out1 = array();
         $bran = array();
         exec($cmd1, &$out1);
         for($i = 0; $i < count($out1); $i++) {
-            $cmd2="GIT_DIR=" . self::$repos[$proj] . $config['repo_suffix'] . " {$config['git_binary']} rev-list --max-count=1 " . escapeshellarg($out1[$i]) . " 2>&1";
+            $cmd2="GIT_DIR=" . self::$repos[$proj] . System::get('repo_suffix') . " {$gitBinary} rev-list --max-count=1 " . escapeshellarg($out1[$i]) . " 2>&1";
             $out2 = array();
             exec($cmd2, &$out2);
             $bran[$out1[$i]] = $out2[0];
@@ -123,22 +127,24 @@ class Git {
         return false;
     }
 
-    public static function shortlogs($config, $proj) {
-        return self::getLastNCommits($config, $proj);
+    public static function shortlogs($proj) {
+        return self::getLastNCommits($proj);
     }
 
-    public static function commit($config, $proj, $commit) {
+    public static function commit($proj, $commit) {
         $options = array(
             'since' => $commit,
             'count' => 1
         );
-        return self::getLastNCommits($config, $proj, $options);
+        return self::getLastNCommits($proj, $options);
     }
 
-    public static function lsTree($config, $proj, $tree) {
+    public static function lsTree($proj, $tree) {
+        $gitBinary = System::get('git_binary');
+
         $out = array();
         //Have to strip the \t between hash and file
-        $cmd = "GIT_DIR=" . self::$repos[$proj] . $config['repo_suffix'] . " {$config['git_binary']} ls-tree " . $tree . " 2>&1 | sed -e 's/\t/ /g'";
+        $cmd = "GIT_DIR=" . self::$repos[$proj] . System::get('repo_suffix') . " {$gitBinary} ls-tree " . $tree . " 2>&1 | sed -e 's/\t/ /g'";
 
         exec($cmd, &$out);
 
@@ -152,9 +158,11 @@ class Git {
         return $results;
     }
 
-    public static function diff($config, $proj, $commit) {
+    public static function diff($proj, $commit) {
+        $gitBinary = System::get('git_binary');
+
         $out = array();
-        $cmd = "GIT_DIR=" . self::$repos[$proj] . $config['repo_suffix'] . " {$config['git_binary']} show {$commit} --format=\"%b\" 2>&1";
+        $cmd = "GIT_DIR=" . self::$repos[$proj] . System::get('repo_suffix') . " {$gitBinary} show {$commit} --format=\"%b\" 2>&1";
         exec($cmd, &$out);
 
         $diff = false;
@@ -192,7 +200,8 @@ class Git {
         return $results;
     }
 
-    private static function getLastNCommits($config, $proj, $options = array()) {
+    private static function getLastNCommits($proj, $options = array()) {
+        $gitBinary = System::get('git_binary');
         $options = array_merge(array(
             'since' => 'HEAD',
             'until' => 'HEAD',
@@ -227,7 +236,7 @@ class Git {
         $format[]   = 'subject %s';
         $format[]   = 'endrecord%n';
         $format     = implode('%n', $format);
-        $cmd = "GIT_DIR=" . self::$repos[$proj] . $config['repo_suffix'] . " {$config['git_binary']} rev-list {$query} {$params} --pretty=format:\"{$format}\"";
+        $cmd = "GIT_DIR=" . self::$repos[$proj] . System::get('repo_suffix') . " {$gitBinary} rev-list {$query} {$params} --pretty=format:\"{$format}\"";
         if ($options['dry']) return $cmd;
         $out = array();
         exec($cmd, &$out);

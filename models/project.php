@@ -1,20 +1,16 @@
 <?php
 class Project {
 
-    var $_config;
-
-    function __construct($config) {
-        $this->_config = $config;
-    }
 
     function findAll() {
-        list($repositories, $valid) = Git::loadRepositories($this->_config);
+        list($repositories, $valid) = Git::loadRepositories();
+        $repoSuffix = System::get('repo_suffix');
 
         $repos = array();
         foreach ($repositories as $repository) {
             $repo = array(
                 'link'          => $this->link($repository),
-                'description'   => file_get_contents("{$repository}{$this->_config['repo_suffix']}description"),
+                'description'   => file_get_contents("{$repository}{$repoSuffix}description"),
                 'owner'         => $this->fileOwner($repository),
                 'last_change'   => $this->lastChange($repository),
                 'download'      => $this->link($repository, array('download' => true)),
@@ -41,17 +37,23 @@ class Project {
     }
 
     function fileOwner($repo) {
+        $repoSuffix = System::get('repo_suffix');
+        $gitBinary = System::get('git_binary');
+
         $out = array();
-        $cmd = "GIT_DIR=" . escapeshellarg($repo . $this->_config['repo_suffix']) . " {$this->_config['git_binary']} rev-list  --header --max-count=1 HEAD 2>&1 | grep -a committer | cut -d' ' -f2-3";
+        $cmd = "GIT_DIR=" . escapeshellarg($repo . $repoSuffix) . " {$gitBinary} rev-list  --header --max-count=1 HEAD 2>&1 | grep -a committer | cut -d' ' -f2-3";
         $own = exec($cmd, &$out);
         return $own;
     }
 
     function lastChange($repo) {
+        $repoSuffix = System::get('repo_suffix');
+        $gitBinary = System::get('git_binary');
+
         $out = array();
-        $cmd = "GIT_DIR=" . escapeshellarg($repo . $this->_config['repo_suffix']) . " {$this->_config['git_binary']} rev-list  --header --max-count=1 HEAD 2>&1 | grep -a committer | cut -d' ' -f5-6";
+        $cmd = "GIT_DIR=" . escapeshellarg($repo . $repoSuffix) . " {$gitBinary} rev-list  --header --max-count=1 HEAD 2>&1 | grep -a committer | cut -d' ' -f5-6";
         $date = exec($cmd, &$out);
-        return date($this->_config['git_date_format'], (int) $date);
+        return date(System::get('git_date_format'), (int) $date);
     }
 
     function repoPath($proj) {
@@ -59,11 +61,11 @@ class Project {
     }
 
     function getTags($proj) {
-        return Git::parse($this->_config, $proj, 'tags');
+        return Git::parse($proj, 'tags');
     }
 
     function getBranches($proj) {
-        return Git::parse($this->_config, $proj, 'branches');
+        return Git::parse($proj, 'branches');
     }
 
     function getStats($repository, $inc = false, $fbasename = 'counters') {
@@ -81,27 +83,29 @@ class Project {
     }
 
     function getShortlog($proj) {
-        return Git::shortlogs($this->_config, $proj);
+        return Git::shortlogs($proj);
     }
 
     function getDiff($proj, $commit) {
-        return Git::diff($this->_config, $proj, $commit);
+        return Git::diff($proj, $commit);
     }
 
     function getTree($proj, $filepath = 'HEAD') {
         if ($filepath != 'HEAD') $filepath = "HEAD:{$filepath}";
-        return Git::lsTree($this->_config, $proj, $filepath);
+        return Git::lsTree($proj, $filepath);
     }
 
     function getCommit($proj, $commit) {
-        $commit = Git::commit($this->_config, $proj, $commit);
+        $commit = Git::commit($proj, $commit);
         if (is_array($commit) && count($commit) == 1) return current($commit);
         return $commit;
     }
 
     function getDescription($proj) {
+        $repoSuffix = System::get('repo_suffix');
+ 
         $path = Git::repoPath($proj);
-        return file_get_contents("{$path}{$this->_config['repo_suffix']}/description");
+        return file_get_contents("{$path}{$repoSuffix}/description");
     }
 
 }
