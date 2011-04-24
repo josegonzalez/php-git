@@ -2,9 +2,11 @@
 
 class ProjectsController extends Controller {
 
-    function show() {
+    protected function beforeFilter() {
         Git::loadRepositories($this->_config);
+    }
 
+    public function show() {
         $this->_breadcrumbs = array(
             'home' => '/',
             $this->_request->params['project'] => "/{$this->_request->params['project']}",

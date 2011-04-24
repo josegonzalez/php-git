@@ -2,9 +2,11 @@
 
 class CommitsController extends Controller {
 
-    function index() {
+    protected function beforeFilter() {
         Git::loadRepositories($this->_config);
+    }
 
+    public function index() {
         $this->_breadcrumbs = array(
             'home' => '/',
             $this->_request->params['project'] => "/{$this->_request->params['project']}",
@@ -20,8 +22,7 @@ class CommitsController extends Controller {
         $this->set(compact('owner', 'last_change', 'description', 'tags', 'branches', 'shortlogs'));
     }
 
-    function show() {
-        Git::loadRepositories($this->_config);
+    public function show() {
         $this->_config['title'] = 'Commit' . $this->_request->params['commit'];
         $this->_breadcrumbs = array(
             'home' => '/',
