@@ -9,43 +9,7 @@ class Controller {
     var $_view;
     var $_breadcrumbs = array('home' => '/');
 
-    public function __set($name, $value) {
-        if (file_exists(MODELS . Inflector::underscore($name)  . '.php')) {
-            require_once(MODELS . Inflector::underscore($name)  . '.php');
-            $this->_models[$name] = $value;
-            return;
-        }
-
-        $trace = debug_backtrace();
-        trigger_error(
-            'Undefined property via __get(): ' . $name .
-            ' in ' . $trace[0]['file'] .
-            ' on line ' . $trace[0]['line'],
-            E_USER_NOTICE);
-        return null;
-    }
-
-    function __get($name) {
-        if (array_key_exists($name, $this->_models)) {
-            return $this->_models[$name];
-        }
-        
-        if (file_exists(MODELS . Inflector::underscore($name)  . '.php')) {
-            require_once(MODELS . Inflector::underscore($name)  . '.php');
-            $this->_models[$name] = new $name($this->_config);
-            return $this->_models[$name];
-        }
-
-        $trace = debug_backtrace();
-        trigger_error(
-            'Undefined property via __get(): ' . $name .
-            ' in ' . $trace[0]['file'] .
-            ' on line ' . $trace[0]['line'],
-            E_USER_NOTICE);
-        return null;
-    }
-
-    function __construct($config, $request) {
+    public function __construct($config, $request) {
         if ($this->name === null) {
             $r = null;
             if (!preg_match('/(.*)Controller/i', get_class($this), $r)) {
@@ -66,18 +30,54 @@ class Controller {
         ));
     }
 
-    function set($name, $data = null) {
+    public function __set($name, $value) {
+        if (file_exists(MODELS . Inflector::underscore($name)  . '.php')) {
+            require_once(MODELS . Inflector::underscore($name)  . '.php');
+            $this->_models[$name] = $value;
+            return;
+        }
+
+        $trace = debug_backtrace();
+        trigger_error(
+            'Undefined property via __get(): ' . $name .
+            ' in ' . $trace[0]['file'] .
+            ' on line ' . $trace[0]['line'],
+            E_USER_NOTICE);
+        return null;
+    }
+
+    public function __get($name) {
+        if (array_key_exists($name, $this->_models)) {
+            return $this->_models[$name];
+        }
+        
+        if (file_exists(MODELS . Inflector::underscore($name)  . '.php')) {
+            require_once(MODELS . Inflector::underscore($name)  . '.php');
+            $this->_models[$name] = new $name($this->_config);
+            return $this->_models[$name];
+        }
+
+        $trace = debug_backtrace();
+        trigger_error(
+            'Undefined property via __get(): ' . $name .
+            ' in ' . $trace[0]['file'] .
+            ' on line ' . $trace[0]['line'],
+            E_USER_NOTICE);
+        return null;
+    }
+
+    public function set($name, $data = null) {
         if ($data) {
             $name = array($name => $data);
         }
         $this->_view->bind($name);
     }
 
-    function layout($layout) {
+    public function layout($layout) {
         $this->_view->setLayout(VIEWS . 'layouts' . DS . $layout);
     }
 
-    function render($template = null) {
+    public function render($template = null) {
         if (!$template) $template = $this->_request->params['action'];
         $this->set('config', $this->_config);
         $this->set('request', $this->_request);
@@ -85,4 +85,18 @@ class Controller {
         $this->_view->display($template);
     }
 
+    public function trigger($actionName) {
+        $this->beforeFilter();
+        $this->$actionName();
+        $this->afterFilter();
+        $this->render();
+    }
+
+    protected function beforeFilter() {
+        
+    }
+
+    protected function afterFilter() {
+        
+    }
 }

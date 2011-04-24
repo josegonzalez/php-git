@@ -11,8 +11,7 @@ class Dispatcher {
         if (!method_exists($controller, $action)) diebug($request);
 
         // Call Action
-        $controller->$action($request);
-        $controller->render();
+        $controller->trigger($action);
     }
 
 }
