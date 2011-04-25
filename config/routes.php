@@ -53,26 +53,21 @@ $router->map('/:project/commits/:branch',
 );
 
 //Files
-$router->map('/:project/file/:branch/:filepath',
-	array('controller' => 'files', 'action' => 'file'),
-	array('project' => '[\w_-]+', 'branch' => '[\w_-]+', 'filepath' => '.*')
-);
-
 $router->map('/:project/blob/:branch/:filepath',
-	array('controller' => 'files', 'action' => 'file'),
+	array('controller' => 'projects', 'action' => 'blob'),
 	array('project' => '[\w_-]+', 'branch' => '[\w_-]+', 'filepath' => '.*')
 );
 
 $router->map('/:project/raw/:branch/:filepath',
-	array('controller' => 'files', 'action' => 'raw'),
+	array('controller' => 'projects', 'action' => 'raw'),
 	array('project' => '[\w_-]+', 'branch' => '[\w_-]+', 'filepath' => '.*')
 );
 $router->map('/:project/blame/:branch/:filepath',
-	array('controller' => 'files', 'action' => 'blame'),
+	array('controller' => 'projects', 'action' => 'blame'),
 	array('project' => '[\w_-]+', 'branch' => '[\w_-]+', 'filepath' => '.*')
 );
 $router->map('/:project/download/:branch/:filepath',
-	array('controller' => 'files', 'action' => 'download'),
+	array('controller' => 'projects', 'action' => 'download'),
 	array('project' => '[\w_-]+', 'branch' => '[\w_-]+', 'filepath' => '.*')
 );
 $router->default_routes();
