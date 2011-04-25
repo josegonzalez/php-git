@@ -139,6 +139,17 @@ class Git {
         return self::getLastNCommits($proj, $options);
     }
 
+    public static function blob($proj, $path) {
+        if (is_file(self::$repos[$proj] . DS . $path)) {
+            $File = new File(self::$repos[$proj] . DS .$path);
+            return array(
+                'content' => $File->read(),
+                'ext' => $File->ext()
+            );
+        }
+        return null;
+    }
+
     public static function lsTree($proj, $tree) {
         $gitBinary = System::get('git_binary');
 

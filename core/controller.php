@@ -3,6 +3,7 @@
 class Controller {
 
     var $name;
+    var $_action;
     var $_request;
     var $_models = array();
     var $_view;
@@ -19,6 +20,7 @@ class Controller {
         }
 
         $this->_request = $request;
+        $this->_action  = $this->_request->params['action'];
         $this->_view    = new Gears($request, array(
             'ext'           => 'php',
             'element_path'  => VIEWS . 'elements' . DS,
@@ -75,11 +77,10 @@ class Controller {
         $this->_view->setLayout(VIEWS . 'layouts' . DS . $layout);
     }
 
-    public function render($template = null) {
-        if (!$template) $template = $this->_request->params['action'];
+    public function render() {
         $this->set('request', $this->_request);
         $this->set('breadcrumbs', $this->_breadcrumbs);
-        $this->_view->display($template);
+        $this->_view->display($this->_action);
     }
 
     public function trigger($actionName) {

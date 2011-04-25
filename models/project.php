@@ -94,6 +94,10 @@ class Project {
         return Git::lsTree($proj, $filepath);
     }
 
+    function getBlob($proj, $filepath = '') {
+        return Git::blob($proj, $filepath);
+    }
+
     function getCommit($proj, $commit) {
         $commit = Git::commit($proj, $commit);
         if (is_array($commit) && count($commit) == 1) return current($commit);
