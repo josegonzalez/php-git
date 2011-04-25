@@ -1,6 +1,5 @@
 <?php
-
-class HomeController extends Controller {
+class HomeController extends AppController {
 
     public function index() {
         System::set('title', 'Home');

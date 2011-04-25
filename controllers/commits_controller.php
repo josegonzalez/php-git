@@ -1,10 +1,5 @@
 <?php
-
-class CommitsController extends Controller {
-
-    protected function beforeFilter() {
-        Git::loadRepositories();
-    }
+class CommitsController extends AppController {
 
     public function index() {
         $this->_breadcrumbs = array(
@@ -12,7 +7,6 @@ class CommitsController extends Controller {
             $this->_request->params['project'] => "/{$this->_request->params['project']}",
         );
 
-        System::set('title', $this->_request->params['project']);
         $owner      = $this->Project->getOwner($this->_request->params['project']);
         $last_change= $this->Project->getLastChange($this->_request->params['project']);
         $description= $this->Project->getDescription($this->_request->params['project']);
