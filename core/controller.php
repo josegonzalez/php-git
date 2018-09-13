@@ -1,4 +1,7 @@
 <?php
+use Cake\Utility\Inflector;
+
+require_once CORE . 'gears.php';
 
 class Controller {
 

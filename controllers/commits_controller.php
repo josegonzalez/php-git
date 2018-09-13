@@ -1,4 +1,6 @@
 <?php
+require_once CONTROLLERS . 'app_controller.php';
+
 class CommitsController extends AppController {
 
     public function index() {

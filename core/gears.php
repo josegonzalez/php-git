@@ -1,4 +1,6 @@
 <?php 
+use Cake\Utility\Inflector;
+
 /**
  * Gears - Template Engine
  *

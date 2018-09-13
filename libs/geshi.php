@@ -4320,7 +4320,7 @@ class GeSHi {
     }
 
     function _genCSSName($name){
-        return (is_numeric($name[0]) ? '_' : '') . $name;
+        return (!empty($name[0]) && is_numeric($name[0]) ? '_' : '') . $name;
     }
 
     /**

@@ -43,7 +43,7 @@ class Git {
         $out = array();
         $gitBinary = System::get('git_binary');
         $cmd = "GIT_DIR=" . escapeshellarg($path . $repoSuffix) . " {$gitBinary} rev-list  --header --max-count=1 HEAD 2>&1 | grep -a committer | cut -d' ' -f2-3";
-        $own = exec($cmd, &$out);
+        $own = exec($cmd, $out);
         return $own;
     }
 
@@ -53,11 +53,11 @@ class Git {
         $cmd1 = "GIT_DIR=" . self::$repos[$proj] . System::get('repo_suffix') . " {$gitBinary} rev-parse  --symbolic --" . escapeshellarg($what) . "  2>&1";
         $out1 = array();
         $bran = array();
-        exec($cmd1, &$out1);
+        exec($cmd1, $out1);
         for($i = 0; $i < count($out1); $i++) {
             $cmd2="GIT_DIR=" . self::$repos[$proj] . System::get('repo_suffix') . " {$gitBinary} rev-list --max-count=1 " . escapeshellarg($out1[$i]) . " 2>&1";
             $out2 = array();
-            exec($cmd2, &$out2);
+            exec($cmd2, $out2);
             $bran[$out1[$i]] = $out2[0];
         }
         return $bran;
@@ -163,7 +163,7 @@ class Git {
             $gitBinary,
             ($tree != '') ? "HEAD:{$tree}" : 'HEAD'
         );
-        exec($cmd, &$out);
+        exec($cmd, $out);
 
         $results = array();
         foreach ($out as $line) {
@@ -202,7 +202,7 @@ class Git {
 
         $out = array();
         $cmd = "GIT_DIR=" . self::$repos[$proj] . System::get('repo_suffix') . " {$gitBinary} show {$commit} --format=\"%b\" 2>&1";
-        exec($cmd, &$out);
+        exec($cmd, $out);
 
         $diff = false;
         $summary = array();
@@ -278,7 +278,7 @@ class Git {
         $cmd = "GIT_DIR=" . self::$repos[$proj] . System::get('repo_suffix') . " {$gitBinary} rev-list {$query} {$params} --pretty=format:\"{$format}\"";
         if ($options['dry']) return $cmd;
         $out = array();
-        exec($cmd, &$out);
+        exec($cmd, $out);
 
         $commit = array();
         $results = array();

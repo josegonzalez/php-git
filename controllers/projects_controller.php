@@ -1,4 +1,7 @@
 <?php
+require_once CONTROLLERS . 'app_controller.php';
+require_once CORE . 'file.php';
+
 class ProjectsController extends AppController {
 
     public function show() {
@@ -16,9 +19,14 @@ class ProjectsController extends AppController {
             }
         }
 
+        $filepath = '';
+        if (!empty($this->_request->params['filepath'])) {
+            $filepath = $this->_request->params['filepath'];
+        }
+
         $tree = $this->Project->getTree(
             $this->_request->params['project'],
-            $this->_request->params['filepath']
+            $filepath
         );
         $this->set(compact('tree'));
     }

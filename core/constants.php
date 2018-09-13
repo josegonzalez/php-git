@@ -1,6 +1,5 @@
 <?php
 
-define('DS', DIRECTORY_SEPARATOR);
 define('APP', dirname(dirname(__FILE__)) . DS);
 define('ROOT', dirname(APP) . DS);
 define('CONFIGS', APP . 'config' . DS);

@@ -1,4 +1,6 @@
 <?php
+require_once CONTROLLERS . 'app_controller.php';
+
 class HomeController extends AppController {
 
     public function index() {

@@ -1,0 +1,108 @@
+[
+    {
+        "name": "cakephp/core",
+        "version": "3.6.11",
+        "version_normalized": "3.6.11.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/cakephp/core.git",
+            "reference": "82741aeb90ca2fbbf9fbbd507d56d53b081db237"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/cakephp/core/zipball/82741aeb90ca2fbbf9fbbd507d56d53b081db237",
+            "reference": "82741aeb90ca2fbbf9fbbd507d56d53b081db237",
+            "shasum": ""
+        },
+        "require": {
+            "cakephp/utility": "^3.6.0",
+            "php": ">=5.6.0"
+        },
+        "suggest": {
+            "cakephp/event": "To use PluginApplicationInterface or plugin applications."
+        },
+        "time": "2018-07-26T19:56:06+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Cake\\Core\\": "."
+            },
+            "files": [
+                "functions.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "CakePHP Community",
+                "homepage": "https://github.com/cakephp/core/graphs/contributors"
+            }
+        ],
+        "description": "CakePHP Framework Core classes",
+        "homepage": "https://cakephp.org",
+        "keywords": [
+            "cakephp",
+            "core",
+            "framework"
+        ]
+    },
+    {
+        "name": "cakephp/utility",
+        "version": "3.6.11",
+        "version_normalized": "3.6.11.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/cakephp/utility.git",
+            "reference": "759915f39c648790dab3a9491eb3785b09f4a6c3"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/cakephp/utility/zipball/759915f39c648790dab3a9491eb3785b09f4a6c3",
+            "reference": "759915f39c648790dab3a9491eb3785b09f4a6c3",
+            "shasum": ""
+        },
+        "require": {
+            "cakephp/core": "^3.6.0",
+            "php": ">=5.6.0"
+        },
+        "suggest": {
+            "ext-intl": "To use Text::transliterate() or Text::slug()",
+            "lib-ICU": "To use Text::transliterate() or Text::slug()"
+        },
+        "time": "2018-09-02T05:18:03+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Cake\\Utility\\": "."
+            },
+            "files": [
+                "bootstrap.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "CakePHP Community",
+                "homepage": "https://github.com/cakephp/utility/graphs/contributors"
+            }
+        ],
+        "description": "CakePHP Utility classes such as Inflector, String, Hash, and Security",
+        "homepage": "https://cakephp.org",
+        "keywords": [
+            "cakephp",
+            "hash",
+            "inflector",
+            "security",
+            "string",
+            "utility"
+        ]
+    }
+]

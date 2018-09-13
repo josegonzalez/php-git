@@ -1,4 +1,6 @@
 <?php
+use Cake\Utility\Inflector;
+
 class System {
 
     static $configuration = array();
@@ -16,6 +18,7 @@ class System {
     public static function dispatch($request) {
         $controllerName = Inflector::classify("{$request->params['controller']}_controller");
 
+        require_once CONTROLLERS . Inflector::underscore($controllerName) . '.php';
         $controller = new $controllerName($request);
         if (!is_object($controller)) diebug($request);
 
